@@ -24,13 +24,10 @@ const centerModel = document.getElementById('centerModel');
 function drawLines() {
   if (!canvas || !centerModel) return;
 
-  // Очищаем предыдущие SVG-линии
   canvas.innerHTML = '';
-  
   const canvasRect = canvas.getBoundingClientRect();
   const modelRect = centerModel.getBoundingClientRect();
 
-  // Находим точный центр модели
   const centerX = (modelRect.left + modelRect.width / 2) - canvasRect.left;
   const centerY = (modelRect.top + modelRect.height / 2) - canvasRect.top;
 
@@ -38,11 +35,9 @@ function drawLines() {
     const nodeRect = node.getBoundingClientRect();
     const projectId = node.getAttribute('data-project');
 
-    // Находим точный центр карточки
     const nodeCenterX = (nodeRect.left + nodeRect.width / 2) - canvasRect.left;
     const nodeCenterY = (nodeRect.top + nodeRect.height / 2) - canvasRect.top;
 
-    // Создаем SVG-линию
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', centerX);
     line.setAttribute('y1', centerY);
@@ -55,11 +50,15 @@ function drawLines() {
   });
 }
 
-// Запуск отрисовки линий при загрузке и ресайзе
-setTimeout(drawLines, 150);
-window.addEventListener('resize', drawLines);
+// Автоматический трекинг ресайза через ResizeObserver (идеально для Vite)
+const resizeObserver = new ResizeObserver(() => {
+  drawLines();
+});
+if (centerModel) {
+  resizeObserver.observe(centerModel.parentElement);
+}
 
-// --- 2. ЛОГИКА ВСПЛЫВАЮЩЕЙ СНОСКИ ---
+// --- 2. КЛИКИ, ПОДCВЕТКА КАРТОЧЕК И ЛИНИЙ ---
 projectNodes.forEach(node => {
   node.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -73,7 +72,7 @@ projectNodes.forEach(node => {
       tooltipBtn.href = project.link;
       tooltip.style.display = 'flex';
 
-      // Позиционируем сноску только на десктопах (на мобилках она снизу в виде фиксированной шторки)
+      // Позиционирование сноски
       if (window.innerWidth > 768) {
         const rect = node.getBoundingClientRect();
         const parentRect = node.parentElement.getBoundingClientRect();
@@ -81,7 +80,6 @@ projectNodes.forEach(node => {
         const relativeTop = rect.top - parentRect.top;
         const relativeLeft = rect.left - parentRect.left;
 
-        // Позиционируем слева или справа, чтобы не вылезала за экран
         if (relativeLeft > parentRect.width / 2) {
           tooltip.style.left = `${relativeLeft - 300}px`; 
         } else {
@@ -90,20 +88,19 @@ projectNodes.forEach(node => {
         tooltip.style.top = `${relativeTop}px`;
       }
 
-      // Подсвечиваем линию нажатого проекта
+      // Подсвечиваем линию
       document.querySelectorAll('.project-line').forEach(l => l.classList.remove('active'));
       const activeLine = document.getElementById(`line-${projectId}`);
-      if (activeLine) activeLine.classList.add('active');
+      if (activeLine) activeLine.setAttribute('class', 'project-line active');
 
-      // подсветка карточкиа гасим все старые активные карточки
+      // Подсвечиваем саму карточку (она остается цветной!)
       projectNodes.forEach(n => n.classList.remove('active'));
-      // Зажигаем текущую кликнутую карточку
       node.classList.add('active');
     }
   });
 });
 
-// Закрытие сноски
+// Закрытие и сброс активностей
 const closeTooltip = () => {
   tooltip.style.display = 'none';
   document.querySelectorAll('.project-line').forEach(l => l.classList.remove('active'));

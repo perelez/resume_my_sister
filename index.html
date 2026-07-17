@@ -8,6 +8,7 @@
   <body>
     <div id="app">
       
+      <!-- СЛОЙ 1: HERO СЕКЦИЯ -->
       <header class="hero-section">
         <video class="hero-video" autoplay loop muted playsinline>
           <source src="/hero-video.mp4" type="video/mp4" />
@@ -20,50 +21,58 @@
         </div>
       </header>
 
+      <!-- СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ -->
       <section class="interactive-section">
-        <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <div class="interactive-container">
           
-          <svg class="lines-canvas" id="linesCanvas"></svg>
+            <!-- SVG холст для динамических линий -->
+            <svg class="lines-canvas" id="linesCanvas"></svg>
           
-          <div class="model-wrapper" id="centerModel">
-            <img src="/center-model.png" alt="Model" class="center-model" />
-          </div>
+            <!-- Центральный элемент сцены -->
+            <div class="model-wrapper" id="centerModel">
+              <img src="/center-model.png" alt="Model" class="center-model" />
+            </div>
 
-          <div class="project-node node-1" data-project="1">
-            <img src="/projects/p1.jfif" alt="Project 1" />
-          </div>
-          <div class="project-node node-2" data-project="2">
-            <img src="/projects/p2.jfif" alt="Project 2" />
-          </div>
-          <div class="project-node node-3" data-project="3">
-            <img src="/projects/p3.jfif" alt="Project 3" />
-          </div>
-          <div class="project-node node-4" data-project="4">
-            <img src="/projects/p4.jfif" alt="Project 4" />
-          </div>
-          <div class="project-node node-5" data-project="5">
-            <img src="/projects/p5.jfif" alt="Project 5" />
-          </div>
-          <div class="project-node node-6" data-project="6">
-            <img src="/projects/p6.jfif" alt="Project 6" />
-          </div>
-          <div class="project-node node-7" data-project="7">
-            <img src="/projects/p7.jfif" alt="Project 7" />
-          </div>
-          <div class="project-node node-8" data-project="8">
-            <img src="/projects/p8.jfif" alt="Project 8" />
-          </div>
+            <!-- Карточки проектов круговой раскладки -->
+            <div class="project-node node-1" data-project="1">
+              <img src="/projects/p1.jfif" alt="Project 1" />
+            </div>
+            <div class="project-node node-2" data-project="2">
+              <img src="/projects/p2.jfif" alt="Project 2" />
+            </div>
+            <div class="project-node node-3" data-project="3">
+              <img src="/projects/p3.jfif" alt="Project 3" />
+            </div>
+            <div class="project-node node-4" data-project="4">
+              <img src="/projects/p4.jfif" alt="Project 4" />
+            </div>
+            <div class="project-node node-5" data-project="5">
+              <img src="/projects/p5.jfif" alt="Project 5" />
+            </div>
+            <div class="project-node node-6" data-project="6">
+              <img src="/projects/p6.jfif" alt="Project 6" />
+            </div>
+            <div class="project-node node-7" data-project="7">
+              <img src="/projects/p7.jfif" alt="Project 7" />
+            </div>
+            <div class="project-node node-8" data-project="8">
+              <img src="/projects/p8.jfif" alt="Project 8" />
+            </div>
 
-          <div class="project-tooltip" id="projectTooltip">
-            <button class="tooltip-close">&times;</button>
-            <h3 class="tooltip-title">Название проекта</h3>
-            <p class="tooltip-desc">Краткое описание</p>
-            <a href="#" class="tooltip-btn">Далее →</a>
-          </div>
+            <!-- Информационная всплывающая сноска -->
+            <div class="project-tooltip" id="projectTooltip">
+              <button class="tooltip-close">&times;</button>
+              <h3 class="tooltip-title">Название проекта</h3>
+              <p class="tooltip-desc">Краткое описание</p>
+              <a href="#" class="tooltip-btn">Далее →</a>
+            </div>
 
+          </div>
         </div>
       </section>
 
+      <!-- СЛОЙ 3: АРХИВ ПРОЕКТОВ -->
       <section class="archive-section">
         <div class="archive-container">
           <div class="archive-header">

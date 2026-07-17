@@ -70,12 +70,13 @@ body {
 }
 
 /* ========================================== */
-/* СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ С МОДЕЛЬЮ      */
+/* СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ (ДВЕ КОЛОНКИ) */
 /* ========================================== */
 .interactive-section {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100vh; 
+  min-height: 650px; /* Ниже этой высоты на ПК контент начнет аккуратно обрезаться */
   background-color: #000000;
   display: flex;
   justify-content: center;
@@ -84,12 +85,18 @@ body {
   border-top: 1px solid #111;
 }
 
+.interactive-wrapper {
+  width: 90vw;
+  max-width: 1100px;
+  aspect-ratio: 16 / 10; 
+  position: relative;
+  container-type: inline-size; 
+}
+
 .interactive-container {
   position: relative;
   width: 100%;
-  max-width: 1100px;
-  height: 80vh;
-  display: block; /* Гарантирует правильный рендеринг */
+  height: 100%;
 }
 
 /* Центр: Модель */
@@ -98,8 +105,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(140px, 25vw, 260px);
-  height: clamp(230px, 42vw, 450px);
+  width: clamp(120px, 22cqw, 240px);
+  height: clamp(200px, 38cqw, 420px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,11 +121,10 @@ body {
   transition: filter 0.5s ease;
 }
 
-/* КАРТОЧКИ: Умный резиновый размер */
+/* КАРТОЧКИ: Размер одинаковый для всей десктопной сетки */
 .project-node {
   position: absolute;
-  /* Размер плавно адаптируется под экран, но не выходит за рамки [65px - 110px] */
-  width: clamp(65px, 9.5vw, 110px);
+  width: clamp(50px, 9.5cqw, 105px);
   aspect-ratio: 3 / 4;
   background-color: #111;
   border: 1px solid #222;
@@ -136,37 +142,32 @@ body {
   transition: filter 0.3s ease;
 }
 
-.project-node:hover {
-  transform: scale(1.08);
-  border-color: #ffffff;
-}
+/* Интерактив при наведении и клике */
+.project-node:hover { transform: scale(1.08); border-color: #ffffff; }
+.project-node:hover img { filter: grayscale(0%); }
+.project-node.active { border-color: #ffffff; transform: scale(1.05); }
+.project-node.active img { filter: grayscale(0%) !important; }
 
-.project-node:hover img {
-  filter: grayscale(0%);
-}
+/* 
+  СТРОГАЯ СИММЕТРИЧНАЯ ВЕРТИКАЛЬНАЯ СЕТКА ДЛЯ ПК (на cqw)
+  Левша: Нечетные (1, 3, 5, 7) строго по линии left: 6cqw
+  Правша: Четные (2, 4, 6, 8) строго по линии right: 6cqw
+*/
 
-/* Карточка остается цветной при клике --- */
-.project-node.active {
-  border-color: #ffffff; /* Белая рамка для активной карточки */
-  transform: scale(1.05);  /* Слегка увеличиваем, чтобы выделить */
-}
+/* --- ЛЕВАЯ КОЛОНКА --- */
+.node-1 { top: 2cqw;   left: 6cqw; }
+.node-3 { top: 14cqw;  left: 6cqw; }
+.node-5 { top: 26cqw;  left: 6cqw; }
+.node-7 { top: 38cqw;  left: 6cqw; }
 
-.project-node.active img {
-  filter: grayscale(0%) !important; /* Убираем ч/б фильтр полностью */
-}
-
-/* Безопасные процентные координаты по кругу */
-.node-1 { top: 5%;   left: 10%; }
-.node-2 { top: 5%;   right: 10%; }
-.node-3 { top: 32%;  left: 2%; }
-.node-4 { top: 32%;  right: 2%; }
-.node-7 { bottom: 32%; left: 10%; }
-.node-8 { bottom: 32%; right: 10%; }
-.node-5 { bottom: 5%; left: 22%; }
-.node-6 { bottom: 5%; right: 22%; }
+/* --- ПРАВАЯ КОЛОНКА --- */
+.node-2 { top: 2cqw;   right: 6cqw; }
+.node-4 { top: 14cqw;  right: 6cqw; }
+.node-6 { top: 26cqw;  right: 6cqw; }
+.node-8 { top: 38cqw;  right: 6cqw; }
 
 /* ========================================== */
-/* СНОСКА (TOOLTIP)                           */
+/* СНОСКА И СЕТКА ЛИНИЙ                       */
 /* ========================================== */
 .project-tooltip {
   position: absolute;
@@ -226,9 +227,6 @@ body {
   color: #fff;
 }
 
-/* ========================================== */
-/* SVG ХОЛСТ И ЛИНИИ                          */
-/* ========================================== */
 .lines-canvas {
   position: absolute;
   top: 0;
@@ -237,7 +235,6 @@ body {
   height: 100%;
   z-index: 3;
   pointer-events: none;
-  display: block;
 }
 
 .project-line {
@@ -265,24 +262,6 @@ body {
 .archive-container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.archive-header {
-  margin-bottom: 60px;
-  text-transform: uppercase;
-}
-
-.archive-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.archive-subtitle {
-  font-size: 0.85rem;
-  color: #555;
-  margin-top: 5px;
-  letter-spacing: 0.1em;
 }
 
 .archive-grid {
@@ -314,79 +293,98 @@ body {
   transition: filter 0.5s, transform 0.5s;
 }
 
-.item-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #111;
-  font-family: monospace;
-}
-
-.item-year {
-  color: #444;
-}
-
-.item-name {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.grid-item:hover {
-  transform: translateY(-4px);
-}
-
-.grid-item:hover img {
-  filter: grayscale(0%);
-  transform: scale(1.02);
-}
-
 /* ========================================== */
-/* АДАПТИВ ПОД МОБИЛКИ (Экран < 768px)       */
+/* МЕДИА-ЗАПРОСЫ (АДАПТИВНОСТЬ)               */
 /* ========================================== */
-@media (max-width: 768px) {
-  .hero-content {
-    padding: 30px 20px;
-  }
 
-  .interactive-container {
-    height: 70vh;
+/* --- 1. ОЧЕНЬ БОЛЬШИЕ МОНИТОРЫ --- */
+@media (min-width: 1400px) {
+  .interactive-wrapper {
+    max-width: 1200px;
   }
+}
 
-  .model-wrapper {
-    width: 110px;
-    height: 190px;
+/* --- 2. ПЛАНШЕТЫ (Ширина от 577px до 1024px) --- */
+@media (max-width: 1024px) and (min-width: 577px) {
+  .interactive-section {
+    height: auto;
+    padding: 60px 0;
+    min-height: 100vh; 
   }
-
+  .interactive-wrapper {
+    width: 95vw;
+    aspect-ratio: 4 / 3; 
+  }
   .project-node {
-    width: 58px;
+    width: clamp(60px, 11cqw, 85px);
+  }
+  .node-1 { top: 2cqw;  left: 4cqw; }
+  .node-3 { top: 16cqw; left: 4cqw; }
+  .node-5 { top: 30cqw; left: 4cqw; }
+  .node-7 { top: 44cqw; left: 4cqw; }
+
+  .node-2 { top: 2cqw;  right: 4cqw; }
+  .node-4 { top: 16cqw; right: 4cqw; }
+  .node-6 { top: 30cqw; right: 4cqw; }
+  .node-8 { top: 44cqw; right: 4cqw; }
+}
+
+/* --- 3. СМАРТФОНЫ (Экран меньше 576px) --- */
+@media (max-width: 576px) {
+  .interactive-section {
+    height: 80vh; /* Возвращаем фиксированную высоту для удержания структуры */
+    min-height: 500px;
+  }
+  .interactive-wrapper {
+    width: 96vw;
+    height: 100%;
+    aspect-ratio: auto; /* Отключаем жесткий aspect-ratio десктопа */
   }
 
-  /* На смартфонах прижимаем к краям поплотнее */
-  .node-1 { top: 2%;   left: 2%; }
-  .node-2 { top: 2%;   right: 2%; }
-  .node-3 { top: 28%;  left: 0%; }
-  .node-4 { top: 28%;  right: 0%; }
-  .node-7 { bottom: 28%; left: 2%; }
-  .node-8 { bottom: 28%; right: 2%; }
-  .node-5 { bottom: 2%; left: 12%; }
-  .node-6 { bottom: 2%; right: 12%; }
+  /* Модель строго по центру экрана телефона */
+  .model-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95px;
+    height: 170px;
+    margin-bottom: 0;
+  }
 
-  /* Удобная шторка снизу экрана вместо летающей сноски */
+  /* Карточки на мобилках: делаем их чуть компактнее, чтобы не перекрывали модель */
+  .project-node {
+    position: absolute;
+    width: 48px;
+  }
+
+  /* 
+    ВЕРТИКАЛЬНЫЕ КОЛОНКИ НА СМАРТФОНАХ (через %)
+    Нечетные стоят слева (left: 2%), четные справа (right: 2%).
+    Идеально выстроены по бокам от модели.
+  */
+  /* Левый ряд */
+  .node-1 { top: 4%;   left: 2%; }
+  .node-3 { top: 28%;  left: 2%; }
+  .node-5 { top: 52%;  left: 2%; }
+  .node-7 { top: 76%;  left: 2%; }
+
+  /* Правый ряд */
+  .node-2 { top: 4%;   right: 2%; }
+  .node-4 { top: 28%;  right: 2%; }
+  .node-6 { top: 52%;  right: 2%; }
+  .node-8 { top: 76%;  right: 2%; }
+
+  /* Удобный мобильный тултип */
   .project-tooltip {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
     top: auto !important;
     width: auto !important;
     background: rgba(15, 15, 15, 0.98);
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
-    padding: 24px;
-  }
-
-  .archive-section {
-    padding: 60px 20px;
+    padding: 20px;
   }
 }

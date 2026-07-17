@@ -1,4 +1,6 @@
-/* сброс стилей */
+/* ========================================== */
+/* СБРОС И БАЗОВЫЕ СТИЛИ                      */
+/* ========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -8,18 +10,20 @@
 body {
   background-color: #000000;
   color: #ffffff;
-  font-family: 'Helvetica Neue', Arial, sans-serif; /* Чистый и строгий шрифт */
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   overflow-x: hidden;
 }
 
-/* Стили для 1-го слоя */
+/* ========================================== */
+/* СЛОЙ 1: HERO СЕКЦИЯ                        */
+/* ========================================== */
 .hero-section {
   position: relative;
   width: 100%;
-  height: 100vh; /* Ровно 100% высоты видимого экрана */
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Сдвигает текст к самому низу */
+  justify-content: flex-end;
   overflow: hidden;
 }
 
@@ -29,33 +33,31 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Видео масштабируется без искажений, заполняя весь экран */
-  z-index: 1; /* Видео лежит на самом нижнем слое */
+  object-fit: cover;
+  z-index: 1;
 }
 
-/* Тонкое стильное затемнение поверх видео */
 .hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.7) 100%);
-  z-index: 2; /* Оверлей лежит поверх видео */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.8) 100%);
+  z-index: 2;
 }
 
-/* Контентная часть с текстом */
 .hero-content {
   position: relative;
-  z-index: 3; /* Текст лежит поверх видео и оверлея */
-  padding: 40px 60px; /* Отступы от краев (на мобилках сделаем меньше) */
-  text-transform: uppercase; /* Всё капсом, как в макете */
+  z-index: 3;
+  padding: 40px 60px;
+  text-transform: uppercase;
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 6vw, 5.5rem); /* Адаптивный размер шрифта */
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
   font-weight: 800;
-  letter-spacing: -0.03em; /* Слегка сжимаем буквы для стильного эффекта */
+  letter-spacing: -0.03em;
   line-height: 0.9;
   margin-bottom: 10px;
 }
@@ -64,34 +66,30 @@ body {
   font-size: clamp(0.9rem, 1.5vw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.05em;
-  color: #cccccc; /* Серый цвет для контраста с главным именем */
+  color: #cccccc;
 }
 
-/* Простая адаптивность под мобильные экраны */
-@media (max-width: 768px) {
-  .hero-content {
-    padding: 30px 20px;
-  }
-}
-
-/* Стили для 2-го слоя */
+/* ========================================== */
+/* СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ С МОДЕЛЬЮ      */
+/* ========================================== */
 .interactive-section {
   position: relative;
   width: 100%;
-  height: 100vh; /* Тоже на весь экран */
+  height: 100vh;
   background-color: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-top: 1px solid #222; /* Тонкая стильная граница между слоями */
+  border-top: 1px solid #111;
 }
 
 .interactive-container {
   position: relative;
   width: 100%;
-  max-width: 1000px; /* Ограничим ширину, чтобы на ультрашироких мониках не разъезжалось */
+  max-width: 1100px;
   height: 80vh;
+  display: block; /* Гарантирует правильный рендеринг */
 }
 
 /* Центр: Модель */
@@ -100,8 +98,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 500px;
+  width: clamp(140px, 25vw, 260px);
+  height: clamp(230px, 42vw, 450px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,17 +110,18 @@ body {
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
-  filter: grayscale(100%); /* Делаем ч/б для стиля */
+  filter: grayscale(100%);
   transition: filter 0.5s ease;
 }
 
-/* Общие стили для кругляшков/карточек проектов */
+/* КАРТОЧКИ: Умный резиновый размер */
 .project-node {
   position: absolute;
-  width: 100px;
-  height: 130px;
+  /* Размер плавно адаптируется под экран, но не выходит за рамки [65px - 110px] */
+  width: clamp(65px, 9.5vw, 110px);
+  aspect-ratio: 3 / 4;
   background-color: #111;
-  border: 1px solid #333;
+  border: 1px solid #222;
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.3s ease, border-color 0.3s ease;
@@ -137,38 +136,50 @@ body {
   transition: filter 0.3s ease;
 }
 
-/* Эффект при наведении на проект */
 .project-node:hover {
   transform: scale(1.08);
-  border-color: #fff;
+  border-color: #ffffff;
 }
 
 .project-node:hover img {
-  filter: grayscale(0%); /* При наведении фотка становится цветной */
+  filter: grayscale(0%);
 }
 
-/* Позиционирование 8 проектов по кругу */
-.node-1 { top: 5%;   left: 15%; }
-.node-2 { top: 5%;   right: 15%; }
-.node-3 { top: 27%;  left: 5%; }
-.node-4 { top: 27%;  right: 5%; }
-.node-5 { bottom: 5%; left: 10%; }
-.node-6 { bottom: 5%; right: 10%; }
-.node-7 { bottom: 27%; left: 15%; } /* Промежуточные точки */
-.node-8 { bottom: 27%; right: 15%; }
+/* Карточка остается цветной при клике --- */
+.project-node.active {
+  border-color: #ffffff; /* Белая рамка для активной карточки */
+  transform: scale(1.05);  /* Слегка увеличиваем, чтобы выделить */
+}
 
-/* Всплывающая сноска */
+.project-node.active img {
+  filter: grayscale(0%) !important; /* Убираем ч/б фильтр полностью */
+}
+
+/* Безопасные процентные координаты по кругу */
+.node-1 { top: 5%;   left: 10%; }
+.node-2 { top: 5%;   right: 10%; }
+.node-3 { top: 32%;  left: 2%; }
+.node-4 { top: 32%;  right: 2%; }
+.node-7 { bottom: 32%; left: 10%; }
+.node-8 { bottom: 32%; right: 10%; }
+.node-5 { bottom: 5%; left: 22%; }
+.node-6 { bottom: 5%; right: 22%; }
+
+/* ========================================== */
+/* СНОСКА (TOOLTIP)                           */
+/* ========================================== */
 .project-tooltip {
   position: absolute;
-  background: rgba(10, 10, 10, 0.95);
-  border: 1px solid #333;
-  padding: 20px;
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(8px);
+  border: 1px solid #222;
+  padding: 24px;
   width: 280px;
   z-index: 100;
-  display: none; /* Изначально скрыто */
+  display: none;
   flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  gap: 12px;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.7);
 }
 
 .tooltip-title {
@@ -179,103 +190,76 @@ body {
 
 .tooltip-desc {
   font-size: 0.85rem;
-  color: #aaa;
+  color: #888;
   line-height: 1.4;
 }
 
 .tooltip-btn {
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: bold;
   margin-top: 5px;
-  transition: color 0.2s;
+  border-bottom: 1px solid #333;
+  width: max-content;
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
 }
 
 .tooltip-btn:hover {
-  color: #aaa;
+  border-color: #ffffff;
 }
 
 .tooltip-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: none;
   border: none;
-  color: #777;
-  font-size: 1.2rem;
+  color: #555;
+  font-size: 1.4rem;
   cursor: pointer;
+  transition: color 0.2s;
 }
 
 .tooltip-close:hover {
   color: #fff;
 }
 
-/* Холст для линий */
+/* ========================================== */
+/* SVG ХОЛСТ И ЛИНИИ                          */
+/* ========================================== */
 .lines-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 4; /* Лежит под карточками и моделью, чтобы не перекрывать их */
-  pointer-events: none; /* Клик сквозь линии будет проходить на карточки */
-}
-
-/* Стилизация самих линий */
-.project-line {
-  stroke: #444; /* Тонкий темно-серый цвет по умолчанию */
-  stroke-width: 1; /* Толщина в 1 пиксель */
-  stroke-dasharray: 4 4; /* Делает линию пунктирной, как на сетке в макете. Если хочешь сплошную — удали эту строку! */
-  transition: stroke 0.3s ease, stroke-width 0.3s ease;
-}
-
-/* Эффект подсветки линии при активности */
-.project-line.active {
-  stroke: #ffffff; /* Белая линия при клике */
-  stroke-width: 1.5;
-}
-/* Обязательно даем родителю position: relative */
-.interactive-container {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  height: 80vh;
-}
-
-/* Наш SVG должен железно стоять на месте и занимать 100% пространства */
-.lines-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3; /* Слой ниже картинок, но видимый */
-  pointer-events: none; /* Пропускает клики сквозь себя */
+  z-index: 3;
+  pointer-events: none;
   display: block;
 }
 
-/* Стили самой линии, если вдруг они не применились */
 .project-line {
-  stroke: #ffffff !important; /* Давай сделаем ее пока просто белой, чтобы точно увидеть! */
-  stroke-width: 1.5;
-  stroke-dasharray: 4 4; /* Пунктир */
-  opacity: 0.4; /* Полупрозрачная, чтобы смотрелось изящно */
-  transition: opacity 0.3s ease, stroke-width 0.3s ease;
+  stroke: #222222;
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
 }
 
-/* Класс для активной линии при клике */
 .project-line.active {
-  opacity: 1;
-  stroke-width: 2.5;
+  stroke: #ffffff;
+  stroke-width: 2;
 }
 
-/* Стили для 3-го слоя (Архив) */
+/* ========================================== */
+/* СЛОЙ 3: АРХИВ                              */
+/* ========================================== */
 .archive-section {
   width: 100%;
   padding: 100px 60px;
   background-color: #000000;
-  border-top: 1px solid #222; /* Тонкая линия разделения между слоями */
+  border-top: 1px solid #111;
 }
 
 .archive-container {
@@ -283,34 +267,30 @@ body {
   margin: 0 auto;
 }
 
-/* Заголовок архива */
 .archive-header {
   margin-bottom: 60px;
   text-transform: uppercase;
 }
 
 .archive-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .archive-subtitle {
-  font-size: 0.9rem;
-  color: #777;
+  font-size: 0.85rem;
+  color: #555;
   margin-top: 5px;
   letter-spacing: 0.1em;
 }
 
-/* Сетка Grid */
 .archive-grid {
   display: grid;
-  /* Автоматически распределяет колонки: минимум 300px каждая */
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 40px; /* Расстояние между проектами */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 40px;
 }
 
-/* Карточка проекта в архиве */
 .grid-item {
   display: block;
   text-decoration: none;
@@ -318,10 +298,9 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* Обертка для картинок, чтобы контролировать пропорции */
 .item-image-wrapper {
   width: 100%;
-  aspect-ratio: 4 / 3; /* Жестко держим пропорции картинок 4:3 */
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 1px solid #111;
   transition: border-color 0.3s ease;
@@ -331,58 +310,83 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(100%); /* Делаем ч/б */
-  transition: filter 0.5s ease, transform 0.5s ease;
+  filter: grayscale(100%);
+  transition: filter 0.5s, transform 0.5s;
 }
 
-/* Информация под картинкой */
 .item-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px dashed #222; /* Пунктирная линия под названием */
-  font-family: monospace; /* Моноширинный шрифт для архивного вида */
+  border-bottom: 1px dashed #111;
+  font-family: monospace;
 }
 
 .item-year {
-  color: #555;
-  font-size: 0.9rem;
+  color: #444;
 }
 
 .item-name {
-  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transition: color 0.3s ease;
 }
 
-/* Эффекты при наведении (Hover) */
 .grid-item:hover {
-  transform: translateY(-5px); /* Легкое приподнимание всей карточки */
+  transform: translateY(-4px);
 }
 
 .grid-item:hover img {
-  filter: grayscale(0%); /* Картинка оживает и становится цветной! */
-  transform: scale(1.03); /* Легкий зум внутри рамки */
+  filter: grayscale(0%);
+  transform: scale(1.02);
 }
 
-.grid-item:hover .item-image-wrapper {
-  border-color: #444;
-}
-
-.grid-item:hover .item-name {
-  color: #aaa; /* Меняем цвет текста на светло-серый */
-}
-
-/* Адаптивность для мобилок */
+/* ========================================== */
+/* АДАПТИВ ПОД МОБИЛКИ (Экран < 768px)       */
+/* ========================================== */
 @media (max-width: 768px) {
+  .hero-content {
+    padding: 30px 20px;
+  }
+
+  .interactive-container {
+    height: 70vh;
+  }
+
+  .model-wrapper {
+    width: 110px;
+    height: 190px;
+  }
+
+  .project-node {
+    width: 58px;
+  }
+
+  /* На смартфонах прижимаем к краям поплотнее */
+  .node-1 { top: 2%;   left: 2%; }
+  .node-2 { top: 2%;   right: 2%; }
+  .node-3 { top: 28%;  left: 0%; }
+  .node-4 { top: 28%;  right: 0%; }
+  .node-7 { bottom: 28%; left: 2%; }
+  .node-8 { bottom: 28%; right: 2%; }
+  .node-5 { bottom: 2%; left: 12%; }
+  .node-6 { bottom: 2%; right: 12%; }
+
+  /* Удобная шторка снизу экрана вместо летающей сноски */
+  .project-tooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    top: auto !important;
+    width: auto !important;
+    background: rgba(15, 15, 15, 0.98);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
+    padding: 24px;
+  }
+
   .archive-section {
     padding: 60px 20px;
-  }
-  
-  .archive-grid {
-    gap: 30px;
   }
 }

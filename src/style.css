@@ -1,6 +1,3 @@
-/* ========================================== */
-/* СБРОС И БАЗОВЫЕ СТИЛИ                      */
-/* ========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -14,9 +11,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ========================================== */
-/* СЛОЙ 1: HERO СЕКЦИЯ                        */
-/* ========================================== */
+/* --- СЛОЙ 1 --- */
 .hero-section {
   position: relative;
   width: 100%;
@@ -26,7 +21,6 @@ body {
   justify-content: flex-end;
   overflow: hidden;
 }
-
 .hero-video {
   position: absolute;
   top: 0;
@@ -36,7 +30,6 @@ body {
   object-fit: cover;
   z-index: 1;
 }
-
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -46,187 +39,150 @@ body {
   background: linear-gradient(to bottom, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.8) 100%);
   z-index: 2;
 }
-
 .hero-content {
   position: relative;
   z-index: 3;
   padding: 40px 60px;
   text-transform: uppercase;
 }
-
 .hero-title {
   font-size: clamp(2.5rem, 6vw, 5.5rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 0.9;
   margin-bottom: 10px;
 }
-
 .hero-subtitle {
   font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-  font-weight: 400;
-  letter-spacing: 0.05em;
   color: #cccccc;
 }
 
-/* ========================================== */
-/* СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ (ДВЕ КОЛОНКИ) */
-/* ========================================== */
+/* --- СЛОЙ 2 (СТИЛИЗАЦИЯ ПОД РЕФЕРЕНС) --- */
 .interactive-section {
   position: relative;
   width: 100%;
-  height: 100vh; 
-  min-height: 650px; /* Ниже этой высоты на ПК контент начнет аккуратно обрезаться */
-  background-color: #000000;
+  min-height: 105vh;
+  background-color: #ffffff; 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-top: 1px solid #111;
+  padding: 60px 0;
+}
+
+/* Огромная надпись на фоне в самом низу секции */
+.bg-watermark {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(3rem, 10vw, 8.5rem);
+  font-weight: 900;
+  color: #f2f2f2;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 .interactive-wrapper {
   width: 90vw;
-  max-width: 1100px;
-  aspect-ratio: 16 / 10; 
+  max-width: 1200px;
   position: relative;
-  container-type: inline-size; 
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layer2-tag {
+  font-size: 0.75rem;
+  color: #888888;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.layer2-title {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0.02em;
+  margin-bottom: 25px;
+  text-transform: lowercase;
 }
 
 .interactive-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 11;
 }
 
-/* Центр: Модель */
+/* СДЕЛАЛИ МОДЕЛЬКУ БОЛЬШЕ */
 .model-wrapper {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(120px, 22cqw, 240px);
-  height: clamp(200px, 38cqw, 420px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 5;
+  width: clamp(260px, 40cqw, 480px); 
+  height: clamp(380px, 58cqw, 700px); 
+  z-index: 4;
+}
+#threeCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 
-.center-model {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  filter: grayscale(100%);
-  transition: filter 0.5s ease;
-}
-
-/* КАРТОЧКИ: Размер одинаковый для всей десктопной сетки */
+/* КАРТОЧКИ С НОМЕРАМИ */
 .project-node {
   position: absolute;
-  width: clamp(50px, 9.5cqw, 105px);
-  aspect-ratio: 3 / 4;
-  background-color: #111;
-  border: 1px solid #222;
+  width: clamp(60px, 9.5cqw, 110px); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.3s ease, border-color 0.3s ease;
   z-index: 10;
 }
-
+.node-img-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 .project-node img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
 }
-
-/* Интерактив при наведении и клике */
-.project-node:hover { transform: scale(1.08); border-color: #ffffff; }
-.project-node:hover img { filter: grayscale(0%); }
-.project-node.active { border-color: #ffffff; transform: scale(1.05); }
-.project-node.active img { filter: grayscale(0%) !important; }
-
-/* 
-  СТРОГАЯ СИММЕТРИЧНАЯ ВЕРТИКАЛЬНАЯ СЕТКА ДЛЯ ПК (на cqw)
-  Левша: Нечетные (1, 3, 5, 7) строго по линии left: 6cqw
-  Правша: Четные (2, 4, 6, 8) строго по линии right: 6cqw
-*/
-
-/* --- ЛЕВАЯ КОЛОНКА --- */
-.node-1 { top: 2cqw;   left: 6cqw; }
-.node-3 { top: 14cqw;  left: 6cqw; }
-.node-5 { top: 26cqw;  left: 6cqw; }
-.node-7 { top: 38cqw;  left: 6cqw; }
-
-/* --- ПРАВАЯ КОЛОНКА --- */
-.node-2 { top: 2cqw;   right: 6cqw; }
-.node-4 { top: 14cqw;  right: 6cqw; }
-.node-6 { top: 26cqw;  right: 6cqw; }
-.node-8 { top: 38cqw;  right: 6cqw; }
-
-/* ========================================== */
-/* СНОСКА И СЕТКА ЛИНИЙ                       */
-/* ========================================== */
-.project-tooltip {
-  position: absolute;
-  background: rgba(10, 10, 10, 0.96);
-  backdrop-filter: blur(8px);
-  border: 1px solid #222;
-  padding: 24px;
-  width: 280px;
-  z-index: 100;
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 15px 45px rgba(0,0,0,0.7);
-}
-
-.tooltip-title {
-  font-size: 1.1rem;
-  text-transform: uppercase;
+.node-number {
+  font-size: 0.75rem;
+  color: #444444;
+  font-weight: 300;
   letter-spacing: 0.05em;
 }
 
-.tooltip-desc {
-  font-size: 0.85rem;
-  color: #888;
-  line-height: 1.4;
+/* Интерактив на фото (увеличение чуть меньше) */
+.project-node:hover .node-img-wrap {
+  transform: scale(1.03);
+}
+.project-node.active .node-img-wrap {
+  transform: scale(1.02);
 }
 
-.tooltip-btn {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-top: 5px;
-  border-bottom: 1px solid #333;
-  width: max-content;
-  padding-bottom: 2px;
-  transition: border-color 0.2s;
-}
+/* ГЕОМЕТРИЯ СЕТКИ */
+.node-1 { top: 0cqw;  left: 0cqw; }
+.node-3 { top: 14cqw; left: 0cqw; }
+.node-5 { top: 28cqw; left: 0cqw; }
+.node-7 { top: 42cqw; left: 0cqw; }
 
-.tooltip-btn:hover {
-  border-color: #ffffff;
-}
+.node-2 { top: 0cqw;  right: 0cqw; }
+.node-4 { top: 14cqw; right: 0cqw; }
+.node-6 { top: 28cqw; right: 0cqw; }
+.node-8 { top: 42cqw; right: 0cqw; }
 
-.tooltip-close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  color: #555;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.tooltip-close:hover {
-  color: #fff;
-}
-
+/* УЛЬТРАТОНКИЕ ЛИНИИ И МИКРО-ТОЧКИ */
 .lines-canvas {
   position: absolute;
   top: 0;
@@ -236,155 +192,121 @@ body {
   z-index: 3;
   pointer-events: none;
 }
-
 .project-line {
-  stroke: #222222;
-  stroke-width: 1.2;
-  stroke-dasharray: 4 4;
+  stroke: #cccccc; 
+  stroke-width: 0.7; /* Сузили линию */
   transition: stroke 0.3s ease, stroke-width 0.3s ease;
 }
-
 .project-line.active {
-  stroke: #ffffff;
-  stroke-width: 2;
+  stroke: #000000;
+  stroke-width: 1.1;
+}
+.line-dot {
+  fill: #cccccc;
+  transition: fill 0.3s ease;
+}
+.line-dot.active {
+  fill: #000000;
 }
 
-/* ========================================== */
-/* СЛОЙ 3: АРХИВ                              */
-/* ========================================== */
-.archive-section {
+/* ТЕКСТОВЫЙ БЛОК О СЕБЕ ПОД МОДЕЛЬЮ */
+.layer2-footer-info {
+  margin-top: 40px;
+  max-width: 540px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 5;
+}
+.layer2-about-tag {
+  font-size: 0.75rem;
+  color: #888888;
+  letter-spacing: 0.05em;
+}
+.layer2-manifesto {
+  font-size: 0.82rem;
+  color: #222222;
+  line-height: 1.6;
+  text-align: center;
+  font-weight: 400;
+}
+
+/* ТУЛТИП СНОСКИ */
+.project-tooltip {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #eee;
+  padding: 20px;
+  width: 260px;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.tooltip-title { font-size: 1rem; color: #000; text-transform: uppercase; }
+.tooltip-desc { font-size: 0.8rem; color: #666; line-height: 1.4; }
+.tooltip-btn { color: #000; text-decoration: none; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #ddd; width: max-content; }
+.tooltip-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
+
+/* --- СЛОИ 3 И 4 --- */
+.categories-section {
+  position: relative;
   width: 100%;
-  padding: 100px 60px;
+  height: 100vh;
   background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   border-top: 1px solid #111;
 }
+.categories-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.4; }
+.categories-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.2), #000); z-index: 2; }
+.categories-wrapper { width: 90vw; max-width: 1200px; aspect-ratio: 16 / 10; position: relative; z-index: 3; container-type: inline-size; }
+.categories-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; }
+.categories-lines .project-line { stroke: #222; stroke-width: 0.7; }
+.category-node { position: absolute; display: flex; flex-direction: column; gap: 8px; width: clamp(80px, 13cqw, 140px); cursor: pointer; z-index: 10; transition: transform 0.3s; }
+.category-node img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
+.category-label { font-size: clamp(0.6rem, 1cqw, 0.85rem); text-transform: uppercase; color: #888; }
+.category-node:hover { transform: translateY(-4px); }
+.category-node:hover img { filter: grayscale(0%); }
+.category-node:hover .category-label { color: #fff; }
 
-.archive-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+.cat-1 { top: 32cqw; left: 8cqw; }  
+.cat-2 { top: 6cqw;  left: 42cqw; }  
+.cat-3 { bottom: 4cqw; left: 12cqw; }  
+.cat-4 { bottom: 12cqw; left: 45cqw; } 
+.cat-5 { top: 20cqw; right: 10cqw; } 
+.cat-6 { bottom: 6cqw; right: 6cqw; }
 
-.archive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 40px;
-}
+.gallery-section { position: relative; width: 100%; background-color: #000000; padding: 60px 0; display: flex; flex-direction: column; align-items: center; }
+.slider-container { position: relative; width: 90vw; max-width: 1200px; display: flex; align-items: center; gap: 15px; }
+.slider-track-wrapper { width: 100%; overflow: hidden; }
+.slider-track { display: flex; gap: 20px; transition: transform 0.5s ease; }
+.slide { min-width: calc((100% - 80px) / 5); aspect-ratio: 3 / 4; overflow: hidden; }
+.slide img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
+.slide:hover img { filter: grayscale(0%); }
+.slider-arrow { background: none; border: 1px solid #222; color: #555; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }
+.slider-arrow:hover { border-color: #fff; color: #fff; }
+.gallery-footer-info { margin-top: 50px; text-align: center; }
+.footer-tag { font-size: 0.75rem; color: #555; letter-spacing: 0.05em; }
+.footer-email { font-size: clamp(1.4rem, 3vw, 2.5rem); font-weight: 700; color: #1a1a1a; margin-top: 10px; transition: color 0.3s; cursor: pointer; }
+.footer-email:hover { color: #fff; }
 
-.grid-item {
-  display: block;
-  text-decoration: none;
-  color: #fff;
-  transition: transform 0.3s ease;
-}
-
-.item-image-wrapper {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 1px solid #111;
-  transition: border-color 0.3s ease;
-}
-
-.grid-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(100%);
-  transition: filter 0.5s, transform 0.5s;
-}
-
-/* ========================================== */
-/* МЕДИА-ЗАПРОСЫ (АДАПТИВНОСТЬ)               */
-/* ========================================== */
-
-/* --- 1. ОЧЕНЬ БОЛЬШИЕ МОНИТОРЫ --- */
-@media (min-width: 1400px) {
-  .interactive-wrapper {
-    max-width: 1200px;
-  }
-}
-
-/* --- 2. ПЛАНШЕТЫ (Ширина от 577px до 1024px) --- */
-@media (max-width: 1024px) and (min-width: 577px) {
-  .interactive-section {
-    height: auto;
-    padding: 60px 0;
-    min-height: 100vh; 
-  }
-  .interactive-wrapper {
-    width: 95vw;
-    aspect-ratio: 4 / 3; 
-  }
-  .project-node {
-    width: clamp(60px, 11cqw, 85px);
-  }
-  .node-1 { top: 2cqw;  left: 4cqw; }
-  .node-3 { top: 16cqw; left: 4cqw; }
-  .node-5 { top: 30cqw; left: 4cqw; }
-  .node-7 { top: 44cqw; left: 4cqw; }
-
-  .node-2 { top: 2cqw;  right: 4cqw; }
-  .node-4 { top: 16cqw; right: 4cqw; }
-  .node-6 { top: 30cqw; right: 4cqw; }
-  .node-8 { top: 44cqw; right: 4cqw; }
-}
-
-/* --- 3. СМАРТФОНЫ (Экран меньше 576px) --- */
-@media (max-width: 576px) {
-  .interactive-section {
-    height: 80vh; /* Возвращаем фиксированную высоту для удержания структуры */
-    min-height: 500px;
-  }
-  .interactive-wrapper {
-    width: 96vw;
-    height: 100%;
-    aspect-ratio: auto; /* Отключаем жесткий aspect-ratio десктопа */
-  }
-
-  /* Модель строго по центру экрана телефона */
-  .model-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 95px;
-    height: 170px;
-    margin-bottom: 0;
-  }
-
-  /* Карточки на мобилках: делаем их чуть компактнее, чтобы не перекрывали модель */
-  .project-node {
-    position: absolute;
-    width: 48px;
-  }
-
-  /* 
-    ВЕРТИКАЛЬНЫЕ КОЛОНКИ НА СМАРТФОНАХ (через %)
-    Нечетные стоят слева (left: 2%), четные справа (right: 2%).
-    Идеально выстроены по бокам от модели.
-  */
-  /* Левый ряд */
-  .node-1 { top: 4%;   left: 2%; }
-  .node-3 { top: 28%;  left: 2%; }
-  .node-5 { top: 52%;  left: 2%; }
-  .node-7 { top: 76%;  left: 2%; }
-
-  /* Правый ряд */
-  .node-2 { top: 4%;   right: 2%; }
-  .node-4 { top: 28%;  right: 2%; }
-  .node-6 { top: 52%;  right: 2%; }
-  .node-8 { top: 76%;  right: 2%; }
-
-  /* Удобный мобильный тултип */
-  .project-tooltip {
-    position: fixed;
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
-    top: auto !important;
-    width: auto !important;
-    background: rgba(15, 15, 15, 0.98);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
-    padding: 20px;
-  }
+/* АДАПТИВНОСТЬ ДЛЯ СМАРТФОНОВ */
+@media (max-width: 768px) {
+  .interactive-container { aspect-ratio: auto; height: 620px; }
+  .model-wrapper { width: 200px; height: 320px; }
+  .project-node { width: 52px; }
+  .node-1 { top: 2%;  left: 2%; } .node-3 { top: 26%; left: 2%; } .node-5 { top: 50%; left: 2%; } .node-7 { top: 74%; left: 2%; }
+  .node-2 { top: 2%;  right: 2%; } .node-4 { top: 26%; right: 2%; } .node-6 { top: 50%; right: 2%; } .node-8 { top: 74%; right: 2%; }
+  .layer2-manifesto { font-size: 0.75rem; padding: 0 10px; }
+  .bg-watermark { display: none; }
+  .categories-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; aspect-ratio: auto; }
+  .category-node { position: static; width: 100%; }
+  .categories-lines { display: none; }
+  .slide { min-width: calc((100% - 20px) / 2); }
 }

@@ -12,7 +12,6 @@
       <header class="hero-section">
         <video class="hero-video" autoplay loop muted playsinline>
           <source src="/hero-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
         </video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -21,103 +20,131 @@
         </div>
       </header>
 
-      <!-- СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ -->
+      <!-- СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ (3D МОДЕЛЬ) -->
       <section class="interactive-section">
+        <!-- Бэкграунд имя на фоне как на рефе -->
+        <div class="bg-watermark">ANASTASIA NOVIKOVA</div>
+
         <div class="interactive-wrapper">
+          <!-- Верхний тег -->
+          <div class="layer2-tag">[favorites]</div>
+          <h2 class="layer2-title">избранные проекты</h2>
+
           <div class="interactive-container">
-          
-            <!-- SVG холст для динамических линий -->
             <svg class="lines-canvas" id="linesCanvas"></svg>
           
-            <!-- Центральный элемент сцены -->
             <div class="model-wrapper" id="centerModel">
-              <img src="/center-model.png" alt="Model" class="center-model" />
+              <canvas id="threeCanvas"></canvas>
             </div>
 
-            <!-- Карточки проектов круговой раскладки -->
+            <!-- Карточки проектов с номерами снизу -->
             <div class="project-node node-1" data-project="1">
-              <img src="/projects/p1.jfif" alt="Project 1" />
+              <div class="node-img-wrap"><img src="/projects/p1.jfif" alt="P1" /></div>
+              <span class="node-number">001</span>
             </div>
             <div class="project-node node-2" data-project="2">
-              <img src="/projects/p2.jfif" alt="Project 2" />
+              <div class="node-img-wrap"><img src="/projects/p2.jfif" alt="P2" /></div>
+              <span class="node-number">005</span>
             </div>
             <div class="project-node node-3" data-project="3">
-              <img src="/projects/p3.jfif" alt="Project 3" />
+              <div class="node-img-wrap"><img src="/projects/p3.jfif" alt="P3" /></div>
+              <span class="node-number">002</span>
             </div>
             <div class="project-node node-4" data-project="4">
-              <img src="/projects/p4.jfif" alt="Project 4" />
+              <div class="node-img-wrap"><img src="/projects/p4.jfif" alt="P4" /></div>
+              <span class="node-number">006</span>
             </div>
             <div class="project-node node-5" data-project="5">
-              <img src="/projects/p5.jfif" alt="Project 5" />
+              <div class="node-img-wrap"><img src="/projects/p5.jfif" alt="P5" /></div>
+              <span class="node-number">003</span>
             </div>
             <div class="project-node node-6" data-project="6">
-              <img src="/projects/p6.jfif" alt="Project 6" />
+              <div class="node-img-wrap"><img src="/projects/p6.jfif" alt="P6" /></div>
+              <span class="node-number">007</span>
             </div>
             <div class="project-node node-7" data-project="7">
-              <img src="/projects/p7.jfif" alt="Project 7" />
+              <div class="node-img-wrap"><img src="/projects/p7.jfif" alt="P7" /></div>
+              <span class="node-number">004</span>
             </div>
             <div class="project-node node-8" data-project="8">
-              <img src="/projects/p8.jfif" alt="Project 8" />
+              <div class="node-img-wrap"><img src="/projects/p8.jfif" alt="P8" /></div>
+              <span class="node-number">008</span>
             </div>
 
-            <!-- Информационная всплывающая сноска -->
             <div class="project-tooltip" id="projectTooltip">
               <button class="tooltip-close">&times;</button>
               <h3 class="tooltip-title">Название проекта</h3>
               <p class="tooltip-desc">Краткое описание</p>
               <a href="#" class="tooltip-btn">Далее →</a>
             </div>
+          </div>
 
+          <!-- Нижний текстовый блок о себе из референса -->
+          <div class="layer2-footer-info">
+            <span class="layer2-about-tag">[about]</span>
+            <p class="layer2-manifesto">
+              Архитектор, креативный директор и режиссер, работающий на пересечении пространства, мультимедиа и культуры. Проектирование общественных пространств, выставок, концертов и фестивалей, где архитектура из формы переходит в опыт, который мы проживаем, а свет, звук и технологии выступают инструментами повествования.
+            </p>
           </div>
         </div>
       </section>
 
-      <!-- СЛОЙ 3: АРХИВ ПРОЕКТОВ -->
-      <section class="archive-section">
-        <div class="archive-container">
-          <div class="archive-header">
-            <h2 class="archive-title">Архив проектов</h2>
-            <p class="archive-subtitle">Полное портфолио по годам</p>
+      <!-- СЛОЙ 3: КАРТА КАТЕГОРИЙ -->
+      <section class="categories-section">
+        <video class="categories-video" autoplay loop muted playsinline>
+          <source src="/categories-bg-video.mp4" type="video/mp4" />
+        </video>
+        <div class="categories-overlay"></div>
+        <div class="categories-wrapper">
+          <svg class="categories-lines" id="categoriesLinesCanvas"></svg>
+          <div class="category-node cat-1" data-link="/creative-direction.html">
+            <img src="/projects/p1.jfif" alt="Креативный дирекшн" />
+            <span class="category-label">креативный дирекшн</span>
           </div>
+          <div class="category-node cat-2" data-link="/forums.html">
+            <img src="/projects/p2.jfif" alt="Форумы продюсирование" />
+            <span class="category-label">форумы<br>продюсирование</span>
+          </div>
+          <div class="category-node cat-3" data-link="/architecture.html">
+            <img src="/projects/p3.jfif" alt="Архитектура проектирование" />
+            <span class="category-label">архитектура<br>проектирование</span>
+          </div>
+          <div class="category-node cat-4" data-link="/concepts.html">
+            <img src="/projects/p4.jfif" alt="Концепты R&D" />
+            <span class="category-label">концепты<br>r&d</span>
+          </div>
+          <div class="category-node cat-5" data-link="/publications.html">
+            <img src="/projects/p5.jfif" alt="Публикации" />
+            <span class="category-label">публикации</span>
+          </div>
+          <div class="category-node cat-6" data-link="/contacts.html">
+            <img src="/projects/p6.jfif" alt="Контакты" />
+            <span class="category-label">контакты</span>
+          </div>
+        </div>
+      </section>
 
-          <div class="archive-grid">
-            <a href="/projects/project-1.html" target="_blank" class="grid-item">
-              <div class="item-image-wrapper">
-                <img src="/projects/p1.jfif" alt="Project 1" />
-              </div>
-              <div class="item-info">
-                <span class="item-year">2026</span>
-                <span class="item-name">Театр Света</span>
-              </div>
-            </a>
-            <a href="/projects/project-2.html" target="_blank" class="grid-item">
-              <div class="item-image-wrapper">
-                <img src="/projects/p2.jfif" alt="Project 2" />
-              </div>
-              <div class="item-info">
-                <span class="item-year">2025</span>
-                <span class="item-name">Павильон 'Гексагон'</span>
-              </div>
-            </a>
-            <a href="/projects/project-3.html" target="_blank" class="grid-item">
-              <div class="item-image-wrapper">
-                <img src="/projects/p3.jfif" alt="Project 3" />
-              </div>
-              <div class="item-info">
-                <span class="item-year">2025</span>
-                <span class="item-name">Реконструкция Завода</span>
-              </div>
-            </a>
-            <a href="/projects/project-4.html" target="_blank" class="grid-item">
-              <div class="item-image-wrapper">
-                <img src="/projects/p4.jfif" alt="Project 4" />
-              </div>
-              <div class="item-info">
-                <span class="item-year">2024</span>
-                <span class="item-name">Жилой Квартал 'Эко-Лайн'</span>
-              </div>
-            </a>
+      <!-- СЛОЙ 4: МЕДИАТЕКА -->
+      <section class="gallery-section">
+        <div class="slider-container">
+          <button class="slider-arrow arrow-left" id="prevBtn">&#10094;</button>
+          <div class="slider-track-wrapper">
+            <div class="slider-track" id="sliderTrack">
+              <div class="slide"><img src="/projects/p1.jfif" alt="1" /></div>
+              <div class="slide"><img src="/projects/p2.jfif" alt="2" /></div>
+              <div class="slide"><img src="/projects/p3.jfif" alt="3" /></div>
+              <div class="slide"><img src="/projects/p4.jfif" alt="4" /></div>
+              <div class="slide"><img src="/projects/p5.jfif" alt="5" /></div>
+              <div class="slide"><img src="/projects/p6.jfif" alt="6" /></div>
+              <div class="slide"><img src="/projects/p7.jfif" alt="7" /></div>
+              <div class="slide"><img src="/projects/p8.jfif" alt="8" /></div>
+            </div>
           </div>
+          <button class="slider-arrow arrow-arrow-right" id="nextBtn">&#10095;</button>
+        </div>
+        <div class="gallery-footer-info">
+          <span class="footer-tag">[contacts]</span>
+          <h2 class="footer-email">novikova.nastyaw@gmail.com</h2>
         </div>
       </section>
 

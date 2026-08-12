@@ -1,154 +1,168 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Anastasia Novikova | Spatial Creative Director</title>
-  </head>
-  <body>
-    <div id="app">
-      
-      <!-- СЛОЙ 1: HERO СЕКЦИЯ -->
-      <header class="hero-section">
-        <video class="hero-video" autoplay loop muted playsinline>
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <h1 class="hero-title">ANASTASIA NOVIKOVA</h1>
-          <p class="hero-subtitle">Spatial Creative Director / Architect</p>
-        </div>
-      </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anastasia Novikova | Spatial Creative Director</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Подключение CSS из папки src -->
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
 
-      <!-- СЛОЙ 2: ИНТЕРАКТИВНАЯ СЕКЦИЯ (3D МОДЕЛЬ) -->
-      <section class="interactive-section">
-        <!-- Бэкграунд имя на фоне как на рефе -->
-        <div class="bg-watermark">ANASTASIA NOVIKOVA</div>
-
-        <div class="interactive-wrapper">
-          <!-- Верхний тег -->
-          <div class="layer2-tag">[favorites]</div>
-          <h2 class="layer2-title">избранные проекты</h2>
-
-          <div class="interactive-container">
-            <svg class="lines-canvas" id="linesCanvas"></svg>
-          
-            <div class="model-wrapper" id="centerModel">
-              <canvas id="threeCanvas"></canvas>
-            </div>
-
-            <!-- Карточки проектов с номерами снизу -->
-            <div class="project-node node-1" data-project="1">
-              <div class="node-img-wrap"><img src="/projects/p1.jfif" alt="P1" /></div>
-              <span class="node-number">001</span>
-            </div>
-            <div class="project-node node-2" data-project="2">
-              <div class="node-img-wrap"><img src="/projects/p2.jfif" alt="P2" /></div>
-              <span class="node-number">005</span>
-            </div>
-            <div class="project-node node-3" data-project="3">
-              <div class="node-img-wrap"><img src="/projects/p3.jfif" alt="P3" /></div>
-              <span class="node-number">002</span>
-            </div>
-            <div class="project-node node-4" data-project="4">
-              <div class="node-img-wrap"><img src="/projects/p4.jfif" alt="P4" /></div>
-              <span class="node-number">006</span>
-            </div>
-            <div class="project-node node-5" data-project="5">
-              <div class="node-img-wrap"><img src="/projects/p5.jfif" alt="P5" /></div>
-              <span class="node-number">003</span>
-            </div>
-            <div class="project-node node-6" data-project="6">
-              <div class="node-img-wrap"><img src="/projects/p6.jfif" alt="P6" /></div>
-              <span class="node-number">007</span>
-            </div>
-            <div class="project-node node-7" data-project="7">
-              <div class="node-img-wrap"><img src="/projects/p7.jfif" alt="P7" /></div>
-              <span class="node-number">004</span>
-            </div>
-            <div class="project-node node-8" data-project="8">
-              <div class="node-img-wrap"><img src="/projects/p8.jfif" alt="P8" /></div>
-              <span class="node-number">008</span>
-            </div>
-
-            <div class="project-tooltip" id="projectTooltip">
-              <button class="tooltip-close">&times;</button>
-              <h3 class="tooltip-title">Название проекта</h3>
-              <p class="tooltip-desc">Краткое описание</p>
-              <a href="#" class="tooltip-btn">Далее →</a>
-            </div>
-          </div>
-
-          <!-- Нижний текстовый блок о себе из референса -->
-          <div class="layer2-footer-info">
-            <span class="layer2-about-tag">[about]</span>
-            <p class="layer2-manifesto">
-              Архитектор, креативный директор и режиссер, работающий на пересечении пространства, мультимедиа и культуры. Проектирование общественных пространств, выставок, концертов и фестивалей, где архитектура из формы переходит в опыт, который мы проживаем, а свет, звук и технологии выступают инструментами повествования.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- СЛОЙ 3: КАРТА КАТЕГОРИЙ -->
-      <section class="categories-section">
-        <video class="categories-video" autoplay loop muted playsinline>
-          <source src="/categories-bg-video.mp4" type="video/mp4" />
-        </video>
-        <div class="categories-overlay"></div>
-        <div class="categories-wrapper">
-          <svg class="categories-lines" id="categoriesLinesCanvas"></svg>
-          <div class="category-node cat-1" data-link="/creative-direction.html">
-            <img src="/projects/p1.jfif" alt="Креативный дирекшн" />
-            <span class="category-label">креативный дирекшн</span>
-          </div>
-          <div class="category-node cat-2" data-link="/forums.html">
-            <img src="/projects/p2.jfif" alt="Форумы продюсирование" />
-            <span class="category-label">форумы<br>продюсирование</span>
-          </div>
-          <div class="category-node cat-3" data-link="/architecture.html">
-            <img src="/projects/p3.jfif" alt="Архитектура проектирование" />
-            <span class="category-label">архитектура<br>проектирование</span>
-          </div>
-          <div class="category-node cat-4" data-link="/concepts.html">
-            <img src="/projects/p4.jfif" alt="Концепты R&D" />
-            <span class="category-label">концепты<br>r&d</span>
-          </div>
-          <div class="category-node cat-5" data-link="/publications.html">
-            <img src="/projects/p5.jfif" alt="Публикации" />
-            <span class="category-label">публикации</span>
-          </div>
-          <div class="category-node cat-6" data-link="/contacts.html">
-            <img src="/projects/p6.jfif" alt="Контакты" />
-            <span class="category-label">контакты</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- СЛОЙ 4: МЕДИАТЕКА -->
-      <section class="gallery-section">
-        <div class="slider-container">
-          <button class="slider-arrow arrow-left" id="prevBtn">&#10094;</button>
-          <div class="slider-track-wrapper">
-            <div class="slider-track" id="sliderTrack">
-              <div class="slide"><img src="/projects/p1.jfif" alt="1" /></div>
-              <div class="slide"><img src="/projects/p2.jfif" alt="2" /></div>
-              <div class="slide"><img src="/projects/p3.jfif" alt="3" /></div>
-              <div class="slide"><img src="/projects/p4.jfif" alt="4" /></div>
-              <div class="slide"><img src="/projects/p5.jfif" alt="5" /></div>
-              <div class="slide"><img src="/projects/p6.jfif" alt="6" /></div>
-              <div class="slide"><img src="/projects/p7.jfif" alt="7" /></div>
-              <div class="slide"><img src="/projects/p8.jfif" alt="8" /></div>
-            </div>
-          </div>
-          <button class="slider-arrow arrow-arrow-right" id="nextBtn">&#10095;</button>
-        </div>
-        <div class="gallery-footer-info">
-          <span class="footer-tag">[contacts]</span>
-          <h2 class="footer-email">novikova.nastyaw@gmail.com</h2>
-        </div>
-      </section>
-
+  <!-- HERO SECTION -->
+  <section class="hero stack-panel" id="top">
+    <video autoplay muted loop playsinline src="/hero-video.mp4"></video>
+    
+    <button class="hamburger" id="hamburgerBtn" aria-label="Меню" aria-expanded="false" aria-controls="siteMenu">
+      <span></span><span></span><span></span>
+    </button>
+    
+    <div class="showreel-tag">[showreel]</div>
+    
+    <nav class="menu" id="siteMenu">
+      <div class="menu-list" id="menuList">
+        <span class="menu-arrow" id="menuArrow">◀</span>
+        <a href="#favorites">избранные проекты</a>
+        <a href="#mindmap">креативный дирекшн</a>
+        <a href="#mindmap">архитектура проектирование</a>
+        <a href="#mindmap">форумы продюсирование</a>
+        <a href="#mindmap">концепты r&amp;d</a>
+        <a href="#mindmap">публикации</a>
+        <a href="#contact">контакты</a>
+      </div>
+    </nav>
+    
+    <div class="hero-title-block">
+      <h1 class="display">ANASTASIA NOVIKOVA</h1>
+      <div class="role">Spatial Creative Director / Architect</div>
     </div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  </section>
+
+  <!-- FAVORITES SECTION -->
+  <section class="favorites stack-panel" id="favorites">
+    <div class="label">[favorite]</div>
+    <h2>избранные проекты</h2>
+
+    <div class="diagram-wrap" id="diagramWrap">
+      <!-- Canvas для отрисовки центральной модели из точек -->
+      <div class="figure-canvas-wrap">
+        <canvas id="c"></canvas>
+      </div>
+      
+      <!-- Connecting SVG Lines -->
+      <svg class="lines-svg" id="linesSvg"></svg>
+
+      <!-- Left Column Projects -->
+      <div class="fav-col fav-col-left">
+        <a class="fav-item fi-1" href="#" data-side="-1" data-row="0.12">
+          <img src="/projects/p1.jfif" alt="Проект 001">
+          <span class="num">001</span>
+        </a>
+        <div class="fav-item fi-2" data-side="-1" data-row="0.36">
+          <img src="/projects/p2.jfif" alt="Проект 002">
+          <span class="num">002</span>
+        </div>
+        <div class="fav-item fi-3" data-side="-1" data-row="0.60">
+          <img src="/projects/p3.jfif" alt="Проект 003">
+          <span class="num">003</span>
+        </div>
+        <div class="fav-item fi-4" data-side="-1" data-row="0.84">
+          <img src="/projects/p4.jfif" alt="Проект 004">
+          <span class="num">004</span>
+        </div>
+      </div>
+
+      <!-- Центральное пространство для Flexbox -->
+      <div class="fav-center"></div>
+
+      <!-- Right Column Projects -->
+      <div class="fav-col fav-col-right">
+        <div class="fav-item fi-1" data-side="1" data-row="0.12">
+          <img src="/projects/p5.jfif" alt="Проект 005">
+          <span class="num">005</span>
+        </div>
+        <div class="fav-item fi-2" data-side="1" data-row="0.36">
+          <img src="/projects/p6.jfif" alt="Проект 006">
+          <span class="num">006</span>
+        </div>
+        <div class="fav-item fi-3" data-side="1" data-row="0.60">
+          <img src="/projects/p7.jfif" alt="Проект 007">
+          <span class="num">007</span>
+        </div>
+        <div class="fav-item fi-4" data-side="1" data-row="0.84">
+          <img src="/projects/p8.jfif" alt="Проект 008">
+          <span class="num">008</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MINDMAP SECTION -->
+  <section class="mindmap stack-panel" id="mindmap">
+    <div class="mindmap-inner">
+      <svg viewBox="0 0 1400 820" xmlns="http://www.w3.org/2000/svg">
+        <polyline class="netline" fill="none" points="190,470 205,635 640,105 645,415 925,265 955,665"/>
+
+        <text x="190" y="575" text-anchor="middle">креативный дирекшн</text>
+        <text x="115" y="745">архитектура</text>
+        <text x="115" y="765">проектирование</text>
+        <text x="735" y="100">форумы</text>
+        <text x="735" y="120">продюсирование</text>
+        <text x="620" y="530">концепты</text>
+        <text x="620" y="550">r&amp;d</text>
+        <text x="730" y="140">публикации</text>
+        <text x="1060" y="670">контакты</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- CAROUSEL & FOOTER WRAPPER -->
+  <div class="mail-block stack-panel">
+    <section class="carousel-section">
+      <div class="carousel" id="carousel">
+        <img class="car-img" src="/projects/p1.jfif" alt="Фото 01">
+        <img class="car-img" src="/projects/p2.jfif" alt="Фото 02">
+        <img class="car-img" src="/projects/p3.jfif" alt="Фото 03">
+        <img class="car-img" src="/projects/p4.jfif" alt="Фото 04">
+        <img class="car-img" src="/projects/p5.jfif" alt="Фото 05">
+        <img class="car-img" src="/projects/p6.jfif" alt="Фото 06">
+        <img class="car-img" src="/projects/p7.jfif" alt="Фото 07">
+        <img class="car-img" src="/projects/p8.jfif" alt="Фото 08">
+      </div>
+      
+      <div class="carousel-controls">
+        <button class="car-btn" id="carPrev" aria-label="Назад">‹</button>
+        <button class="car-btn" id="carNext" aria-label="Вперёд">›</button>
+      </div>
+      
+      <div class="carousel-about">
+        <div class="label">[about]</div>
+        <p>На пересечении архитектуры, сценографии, пространственной драматургии, мультимедиа и культурных проектов.</p>
+      </div>
+    </section>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox" id="lightbox">
+      <button class="lb-close" id="lbClose" aria-label="Закрыть">×</button>
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее фото">‹</button>
+      <img class="lb-img" id="lbImg" src="" alt="">
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Следующее фото">›</button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer" id="contact">
+      <a class="email" href="mailto:novikova.nastyaw@gmail.com">novikova.nastyaw@gmail.com</a>
+    </footer>
+  </div>
+
+  <!-- JS из папки src -->
+  <script type="module" src="/src/figure-animation.js"></script>
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>

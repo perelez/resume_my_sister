@@ -1,312 +1,599 @@
+:root {
+  --ink: #0A0A0A;
+  --paper: #FFFFFF;
+  --grey: #8C8C8C;
+  --green-bg: #0D1F12;
+  --green-glow: #3C6B3F;
+  --red: #D6321E;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: #000000;
-  color: #ffffff;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
   overflow-x: hidden;
 }
 
-/* --- СЛОЙ 1 --- */
-.hero-section {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
+a {
+  color: inherit;
+  text-decoration: none;
 }
-.hero-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+
+img {
+  display: block;
+  max-width: 100%;
 }
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.8) 100%);
-  z-index: 2;
-}
-.hero-content {
-  position: relative;
-  z-index: 3;
-  padding: 40px 60px;
+
+.display {
+  font-family: 'Anton', sans-serif;
   text-transform: uppercase;
-}
-.hero-title {
-  font-size: clamp(2.5rem, 6vw, 5.5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 10px;
-}
-.hero-subtitle {
-  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-  color: #cccccc;
+  letter-spacing: .01em;
 }
 
-/* --- СЛОЙ 2 (СТИЛИЗАЦИЯ ПОД РЕФЕРЕНС) --- */
-.interactive-section {
-  position: relative;
-  width: 100%;
-  min-height: 105vh;
-  background-color: #ffffff; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  padding: 60px 0;
-}
-
-/* Огромная надпись на фоне в самом низу секции */
-.bg-watermark {
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(3rem, 10vw, 8.5rem);
-  font-weight: 900;
-  color: #f2f2f2;
-  white-space: nowrap;
-  letter-spacing: 0.02em;
-  z-index: 1;
-  pointer-events: none;
-  user-select: none;
-}
-
-.interactive-wrapper {
-  width: 90vw;
-  max-width: 1200px;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.layer2-tag {
-  font-size: 0.75rem;
-  color: #888888;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.layer2-title {
-  font-size: 1.6rem;
-  font-weight: 400;
-  color: #000000;
-  letter-spacing: 0.02em;
-  margin-bottom: 25px;
+.lowercase {
   text-transform: lowercase;
 }
 
-.interactive-container {
+.label {
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ---------- HERO SECTION ---------- */
+.hero {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 11;
-}
-
-/* СДЕЛАЛИ МОДЕЛЬКУ БОЛЬШЕ */
-.model-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: clamp(260px, 40cqw, 480px); 
-  height: clamp(380px, 58cqw, 700px); 
-  z-index: 4;
-}
-#threeCanvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-/* КАРТОЧКИ С НОМЕРАМИ */
-.project-node {
-  position: absolute;
-  width: clamp(60px, 9.5cqw, 110px); 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  z-index: 10;
-}
-.node-img-wrap {
-  width: 100%;
-  aspect-ratio: 3 / 4;
+  height: 100dvh; /* Используем dvh вместо svh/vh для точного размера */
+  background: #000;
   overflow: hidden;
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.project-node img {
+
+.hero video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.node-number {
-  font-size: 0.75rem;
-  color: #444444;
-  font-weight: 300;
-  letter-spacing: 0.05em;
+  filter: grayscale(1) contrast(1.15) brightness(.85);
+  opacity: .9;
 }
 
-/* Интерактив на фото (увеличение чуть меньше) */
-.project-node:hover .node-img-wrap {
-  transform: scale(1.03);
-}
-.project-node.active .node-img-wrap {
-  transform: scale(1.02);
-}
-
-/* ГЕОМЕТРИЯ СЕТКИ */
-.node-1 { top: 0cqw;  left: 0cqw; }
-.node-3 { top: 14cqw; left: 0cqw; }
-.node-5 { top: 28cqw; left: 0cqw; }
-.node-7 { top: 42cqw; left: 0cqw; }
-
-.node-2 { top: 0cqw;  right: 0cqw; }
-.node-4 { top: 14cqw; right: 0cqw; }
-.node-6 { top: 28cqw; right: 0cqw; }
-.node-8 { top: 42cqw; right: 0cqw; }
-
-/* УЛЬТРАТОНКИЕ ЛИНИИ И МИКРО-ТОЧКИ */
-.lines-canvas {
+.hero::after {
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.75) 100%);
+}
+
+.hamburger {
+  position: absolute;
+  top: 26px;
+  left: 28px;
+  z-index: 20;
+  width: 26px;
+  height: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
   width: 100%;
-  height: 100%;
-  z-index: 3;
+  background: #fff;
+}
+
+.menu {
+  position: absolute;
+  top: 58px;
+  left: 28px;
+  z-index: 15;
+  max-width: calc(100vw - 56px);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .38s cubic-bezier(.4,0,.2,1);
+}
+
+.menu.open {
+  max-height: 340px;
+}
+
+.menu-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+  font-size: clamp(14px, 2vw, 19px);
+  color: #fff;
+}
+
+.menu-list a {
+  display: inline-block;
+  width: max-content;
+  padding: 2px 0;
+  transition: opacity .2s;
+}
+
+.menu-list a:hover,
+.menu-list a:focus-visible {
+  opacity: .65;
+}
+
+.menu-list a:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 4px;
+}
+
+.menu-arrow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 13px;
+  color: #fff;
+  opacity: 0;
+  transform: translate(0, -2px);
+  transition: opacity .15s ease, top .18s ease, left .18s ease;
   pointer-events: none;
 }
-.project-line {
-  stroke: #cccccc; 
-  stroke-width: 0.7; /* Сузили линию */
-  transition: stroke 0.3s ease, stroke-width 0.3s ease;
-}
-.project-line.active {
-  stroke: #000000;
-  stroke-width: 1.1;
-}
-.line-dot {
-  fill: #cccccc;
-  transition: fill 0.3s ease;
-}
-.line-dot.active {
-  fill: #000000;
-}
 
-/* ТЕКСТОВЫЙ БЛОК О СЕБЕ ПОД МОДЕЛЬЮ */
-.layer2-footer-info {
-  margin-top: 40px;
-  max-width: 540px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  z-index: 5;
-}
-.layer2-about-tag {
-  font-size: 0.75rem;
-  color: #888888;
-  letter-spacing: 0.05em;
-}
-.layer2-manifesto {
-  font-size: 0.82rem;
-  color: #222222;
-  line-height: 1.6;
-  text-align: center;
-  font-weight: 400;
-}
-
-/* ТУЛТИП СНОСКИ */
-.project-tooltip {
+.showreel-tag {
   position: absolute;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid #eee;
-  padding: 20px;
-  width: 260px;
-  z-index: 100;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: #e8e8e8;
+  font-size: 12px;
+  letter-spacing: .08em;
 }
-.tooltip-title { font-size: 1rem; color: #000; text-transform: uppercase; }
-.tooltip-desc { font-size: 0.8rem; color: #666; line-height: 1.4; }
-.tooltip-btn { color: #000; text-decoration: none; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #ddd; width: max-content; }
-.tooltip-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
 
-/* --- СЛОИ 3 И 4 --- */
-.categories-section {
+.hero-title-block {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  z-index: 10;
+  padding: 0 28px;
+  color: #fff;
+}
+
+.hero-title-block h1 {
+  font-size: clamp(48px, 9.5vw, 150px);
+  line-height: .92;
+  white-space: nowrap;
+}
+
+.hero-title-block .role {
+  margin-top: 10px;
+  font-size: clamp(14px, 1.8vw, 22px);
+  font-weight: 300;
+}
+
+/* ---------- FAVORITES SECTION ---------- */
+.favorites {
   position: relative;
-  width: 100%;
-  height: 100vh;
-  background-color: #000000;
+  /* Заменяем жесткие пиксели на динамические отступы, чтобы не ломать высоту слайда */
+  padding: 4dvh 0; 
+  text-align: center;
+  background: var(--paper);
+  height: 100dvh; /* Секция строго на весь экран */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center; /* Центрируем всё содержимое по вертикали */
   overflow: hidden;
-  border-top: 1px solid #111;
 }
-.categories-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.4; }
-.categories-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.2), #000); z-index: 2; }
-.categories-wrapper { width: 90vw; max-width: 1200px; aspect-ratio: 16 / 10; position: relative; z-index: 3; container-type: inline-size; }
-.categories-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; }
-.categories-lines .project-line { stroke: #222; stroke-width: 0.7; }
-.category-node { position: absolute; display: flex; flex-direction: column; gap: 8px; width: clamp(80px, 13cqw, 140px); cursor: pointer; z-index: 10; transition: transform 0.3s; }
-.category-node img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
-.category-label { font-size: clamp(0.6rem, 1cqw, 0.85rem); text-transform: uppercase; color: #888; }
-.category-node:hover { transform: translateY(-4px); }
-.category-node:hover img { filter: grayscale(0%); }
-.category-node:hover .category-label { color: #fff; }
 
-.cat-1 { top: 32cqw; left: 8cqw; }  
-.cat-2 { top: 6cqw;  left: 42cqw; }  
-.cat-3 { bottom: 4cqw; left: 12cqw; }  
-.cat-4 { bottom: 12cqw; left: 45cqw; } 
-.cat-5 { top: 20cqw; right: 10cqw; } 
-.cat-6 { bottom: 6cqw; right: 6cqw; }
+/* Метка [favorite] и заголовок остаются без изменений */
+.favorites .label {
+  font-size: 7px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
 
-.gallery-section { position: relative; width: 100%; background-color: #000000; padding: 60px 0; display: flex; flex-direction: column; align-items: center; }
-.slider-container { position: relative; width: 90vw; max-width: 1200px; display: flex; align-items: center; gap: 15px; }
-.slider-track-wrapper { width: 100%; overflow: hidden; }
-.slider-track { display: flex; gap: 20px; transition: transform 0.5s ease; }
-.slide { min-width: calc((100% - 80px) / 5); aspect-ratio: 3 / 4; overflow: hidden; }
-.slide img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
-.slide:hover img { filter: grayscale(0%); }
-.slider-arrow { background: none; border: 1px solid #222; color: #555; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }
-.slider-arrow:hover { border-color: #fff; color: #fff; }
-.gallery-footer-info { margin-top: 50px; text-align: center; }
-.footer-tag { font-size: 0.75rem; color: #555; letter-spacing: 0.05em; }
-.footer-email { font-size: clamp(1.4rem, 3vw, 2.5rem); font-weight: 700; color: #1a1a1a; margin-top: 10px; transition: color 0.3s; cursor: pointer; }
-.footer-email:hover { color: #fff; }
+.favorites h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200; 
+  font-size: clamp(10px, 2.0vw, 15px); 
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+  margin-bottom: 12px;
+}
 
-/* АДАПТИВНОСТЬ ДЛЯ СМАРТФОНОВ */
-@media (max-width: 768px) {
-  .interactive-container { aspect-ratio: auto; height: 620px; }
-  .model-wrapper { width: 200px; height: 320px; }
-  .project-node { width: 52px; }
-  .node-1 { top: 2%;  left: 2%; } .node-3 { top: 26%; left: 2%; } .node-5 { top: 50%; left: 2%; } .node-7 { top: 74%; left: 2%; }
-  .node-2 { top: 2%;  right: 2%; } .node-4 { top: 26%; right: 2%; } .node-6 { top: 50%; right: 2%; } .node-8 { top: 74%; right: 2%; }
-  .layer2-manifesto { font-size: 0.75rem; padding: 0 10px; }
-  .bg-watermark { display: none; }
-  .categories-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; aspect-ratio: auto; }
-  .category-node { position: static; width: 100%; }
-  .categories-lines { display: none; }
-  .slide { min-width: calc((100% - 20px) / 2); }
+.diagram-wrap {
+  height: 100dvh; 
+  width: auto; /* Ширина вычисляется сама благодаря aspect-ratio */
+  max-width: 96vw; /* Защита для узких экранов, чтобы не появилась горизонтальная прокрутка */
+  aspect-ratio: 2.5; /* Железобетонная пропорция сетки */
+  margin: auto; /* Дополнительно центрирует блок в оставшемся пространстве */
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.fav-col {
+  position: relative;
+  flex: 0 0 33%;
+  z-index: 2;
+}
+
+.fav-col-right {
+  order: 3;
+}
+
+.fav-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fav-item img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.fav-item .num {
+  flex: 0 0 auto;
+  margin-top: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(10px, 0.9vw, 15px);
+  color: var(--ink);
+  text-align: center;
+}
+
+/* ---------- ЛЕВАЯ КОЛОНКА ---------- */
+.fav-col-left .fi-1 { left: 5%;   top: -10%;   width: clamp(100px, 35%, 280px); }
+.fav-col-left .fi-2 { left: 65%;  top: 18%;  width: clamp(80px, 25%, 180px); }
+.fav-col-left .fi-3 { left: 7%;   top: 40%;  width: clamp(90px, 28%, 200px); }
+.fav-col-left .fi-4 { left: 50%;  top: 62%;  width: clamp(95px, 32%, 250px); }
+
+/* ---------- ПРАВАЯ КОЛОНКА ---------- */
+.fav-col-right .fi-1 { left: -20%;   top: -10%;   width: clamp(70px, 30%, 230px); }
+.fav-col-right .fi-2 { right: 30%;  top: -3%;  width: clamp(60px, 27%, 200px); left: auto; }
+.fav-col-right .fi-3 { left: 10%;  top: 32%;  width: clamp(100px, 37%, 300px); }
+.fav-col-right .fi-4 { right: 15%;  top: 65%;  width: clamp(70px, 30%, 190px); left: auto; }
+.fav-center {
+  flex: 1;
+  position: relative;
+  min-width: 60px;
+  order: 2;
+  pointer-events: none;
+}
+
+/* Позиционирование слоя Canvas под интерактивной моделью */
+.figure-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.figure-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.lines-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.lines-svg polyline {
+  fill: none;
+  stroke: #B9B9B9;
+  stroke-width: 1;
+}
+
+.watermark {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  overflow: hidden;
+  padding-bottom: 10px;
+  margin-top: -6px;
+}
+
+.watermark span {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(60px, 13vw, 190px);
+  color: #EDEDED;
+  line-height: 1;
+  display: inline-block;
+}
+/* ---------- MINDMAP SECTION ---------- */
+.mindmap {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 25% 30%, rgba(20,50,25,.6), transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(10,35,18,.55), transparent 55%),
+    var(--green-bg) url(/categories-bg-video.mp4) center/cover no-repeat;
+  padding: 60px 20px;
+  overflow: hidden;
+  height: 100dvh; /* На весь экран */
+  display: flex;
+  align-items: center; /* Центрируем по вертикали */
+  justify-content: center; /* Центрируем по горизонтали */
+}
+
+.mindmap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(9,22,12,.62);
+}
+
+.mindmap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .25;
+  mix-blend-mode: overlay;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  background-size: 180px 180px;
+}
+
+.mindmap-inner {
+  width: 100%;
+  max-width: 1300px;
+  max-height: 85dvh; /* Не даем svg вылезать за края */
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.mindmap-inner svg {
+  width: 100%;
+  height: auto;
+  max-height: 85dvh;
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+.mindmap text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  fill: #EFEFE9;
+  text-transform: lowercase;
+}
+
+.mindmap .netline {
+  stroke: rgba(255,255,255,.55);
+  stroke-width: 1;
+}
+
+.mindmap .spark {
+  stroke: var(--red);
+  stroke-width: 1.4;
+}
+
+.mindmap image {
+  outline: 1px solid rgba(255,255,255,.7);
+}
+
+/* ---------- CAROUSEL SECTION ---------- */
+.carousel-section {
+  background: #000;
+  color: #fff;
+  padding: 60px 0 70px;
+}
+
+.carousel {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel img {
+  scroll-snap-align: start;
+  height: 460px;
+  width: auto;
+  aspect-ratio: 118/216;
+  object-fit: cover;
+  filter: grayscale(.15) contrast(1.05);
+  flex-shrink: 0;
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px 30px;
+}
+
+.car-btn {
+  background: none;
+  border: 1px solid #444;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s, background .2s;
+}
+
+.car-btn:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,.08);
+}
+
+.carousel-about {
+  text-align: center;
+  max-width: 560px;
+  margin: 30px auto 0;
+  padding: 0 24px;
+}
+
+.carousel-about .label {
+  color: #8c8c8c;
+}
+
+.carousel-about p {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #cfcfcf;
+}
+
+.car-img {
+  cursor: zoom-in;
+}
+
+/* ---------- LIGHTBOX ---------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,.94);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.lightbox.open {
+  display: flex;
+}
+
+.lb-img {
+  max-width: 88vw;
+  max-height: 86vh;
+  object-fit: contain;
+  filter: grayscale(.1);
+}
+
+.lb-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lb-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+  border: 1px solid #555;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s, background .2s;
+}
+
+.lb-nav:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,.12);
+}
+
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
+
+/* ---------- SCROLL STACK EFFECT ---------- */
+.stack-panel {
+  position: sticky !important;
+  top: 0;
+  height: 100dvh; /* Строго 100% видимой высоты экрана */
+  width: 100vw;
+  overflow: hidden; /* Запрещаем скролл внутри самого слайда */
+}
+
+.hero.stack-panel { z-index: 1; }
+.favorites.stack-panel { z-index: 2; }
+.mindmap.stack-panel { z-index: 3; }
+.mail-block.stack-panel { z-index: 4; }
+
+/* ---------- FOOTER ---------- */
+.footer {
+  background: #000;
+  color: #fff;
+  padding: 40px 20px 60px;
+  text-align: center;
+  border-top: 1px solid #1a1a1a;
+}
+
+.footer a.email {
+  font-family: 'Anton', sans-serif;
+  text-transform: lowercase;
+  font-size: clamp(28px, 6.5vw, 84px);
+  display: inline-block;
+  word-break: break-word;
+}
+
+.footer a.email:hover {
+  color: #B9B9B9;
+}
+
+/* ---------- RESPONSIVE MEDIA QUERIES ---------- */
+@media (max-width: 720px) {
+  .hero-title-block h1 { white-space: normal; }
+  .menu { top: 56px; }
+  .carousel img { height: 360px; width: auto; aspect-ratio: 118/216; }
+}
+
+@media (max-width: 600px) {
+  .lightbox { padding: 16px; }
+  .lb-nav { width: 40px; height: 40px; font-size: 18px; }
+  .lb-close { top: 12px; right: 14px; font-size: 26px; }
+}
+
+@media (max-width: 420px) {
+  .hero-title-block { bottom: 36px; padding: 0 18px; }
+  .favorites { padding: 50px 16px 30px; }
 }

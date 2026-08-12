@@ -1,350 +1,247 @@
-import './style.css';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+document.addEventListener('DOMContentLoaded', () => {
+  /* -------------------------------------------------------------
+   * 1. NAVIGATION & HAMBURGER MENU
+   * ------------------------------------------------------------- */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const siteMenu = document.getElementById('siteMenu');
+  const menuList = document.getElementById('menuList');
+  const menuArrow = document.getElementById('menuArrow');
 
-const projectsData = {
-  1: { title: "Театр Света", desc: "Световая инсталляция в виде мужского причендала.", link: "/project-1.html" },
-  2: { title: "Павильон 'Красота'", desc: "Временная выставочная конструкция из перерабатываемых материалов.", link: "/project-2.html" },
-  3: { title: "52 регион", desc: "это мой город в котором я живу 52 еу", link: "/project-3.html" },
-  4: { title: "Жук навозник", desc: "Концепт жилой застройки средней этажности с акцентом на зеленые зоны.", link: "/project-4.html" },
-  5: { title: "Музей Современного Искусства", desc: "Пространство с уникальной геометрией потолков.", link: "/project-5.html" },
-  6: { title: "Сценография 'Урбан'", desc: "Разработка сценического пространства для масштабного мультимедийного шоу.", link: "/project-6.html" },
-  7: { title: "Арт-Объект 'Портал'", desc: "Интерактивная зеркальная арка, реагирующая на приближение людей.", link: "/project-7.html" },
-  8: { title: "Лофт", desc: "Просто очень очень крутое слово которое звучит как надо.", link: "/project-8.html" }
-};
+  function hideArrow() {
+    if (menuArrow) menuArrow.style.opacity = '0';
+  }
 
-const projectNodes = document.querySelectorAll('.project-node');
-const tooltip = document.getElementById('projectTooltip');
-const tooltipTitle = tooltip.querySelector('.tooltip-title');
-const tooltipDesc = tooltip.querySelector('.tooltip-desc');
-const tooltipBtn = tooltip.querySelector('.tooltip-btn');
-const tooltipClose = tooltip.querySelector('.tooltip-close');
-const canvas = document.getElementById('linesCanvas');
-const centerModel = document.getElementById('centerModel');
-const threeCanvas = document.getElementById('threeCanvas');
+  function moveArrow(e) {
+    const link = e.currentTarget;
+    if (!menuArrow || !link) return;
+    menuArrow.style.top = `${link.offsetTop}px`;
+    menuArrow.style.left = `${link.offsetLeft + link.offsetWidth + 10}px`;
+    menuArrow.style.opacity = '1';
+  }
 
-const categoryNodes = document.querySelectorAll('.category-node');
-const categoriesLinesCanvas = document.getElementById('categoriesLinesCanvas');
+  function toggleMenu() {
+    const isOpen = siteMenu.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (!isOpen) hideArrow();
+  }
 
-const sliderTrack = document.getElementById('sliderTrack');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', toggleMenu);
+  }
 
-// --- 1. НАСТРОЙКА THREE.JS И ИНВЕРСНОЙ АНИМАЦИИ ОБЕИХ РУК ---
-let scene, camera, renderer, model;
-
-// Кости для управления левой и правой стороной
-let boneShoulderR, boneHandR, boneShoulderL, boneHandL;
-
-// Таргеты углов для сглаживания вращений
-let targetRot = {
-  shoulderRX: 0, shoulderRZ: 0, handRX: 0, handRZ: 0,
-  shoulderLX: 0, shoulderLZ: 0, handLX: 0, handLZ: 0
-};
-
-if (centerModel && threeCanvas) {
-  scene = new THREE.Scene();
-
-  // Придвинули камеру ближе (z = 4.0 вместо 5) чтобы моделька визуально казалась больше
-  camera = new THREE.PerspectiveCamera(42, centerModel.clientWidth / centerModel.clientHeight, 0.1, 100);
-  camera.position.set(0, 0.2, 4.0);
-
-  renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, alpha: true });
-  renderer.setSize(centerModel.clientWidth, centerModel.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
-  scene.add(ambientLight);
-
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  directionalLight.position.set(2, 3, 4);
-  scene.add(directionalLight);
-
-  const loader = new GLTFLoader();
-  loader.load(
-    '/spider-man.glb',
-    (gltf) => {
-      model = gltf.scene;
-      
-      const box = new THREE.Box3().setFromObject(model);
-      const center = box.getCenter(new THREE.Vector3());
-      model.position.x += (model.position.x - center.x);
-      model.position.y += (model.position.y - center.y) - 0.2; // Немного опустили для идеальной центровки
-      
-      // Увеличили масштаб самой 3D-модели
-      model.scale.set(1.25, 1.25, 1.25);
-      scene.add(model);
-
-      // Инициализируем плечевые суставы и предплечья для обеих рук
-      boneShoulderR = model.getObjectByName('shoulderR') || model.getObjectByName('upperarmR') || model.getObjectByName('armR_1');
-      boneHandR = model.getObjectByName('handR_7') || model.getObjectByName('forearmR') || model.getObjectByName('armR_2');
-      
-      boneShoulderL = model.getObjectByName('shoulderL') || model.getObjectByName('upperarmL') || model.getObjectByName('armL_1');
-      boneHandL = model.getObjectByName('handL_7') || model.getObjectByName('forearmL') || model.getObjectByName('armL_2');
-    },
-    undefined,
-    (error) => console.error('Ошибка загрузки модели:', error)
-  );
-
-  function animate() {
-    requestAnimationFrame(animate);
+  if (menuList) {
+    menuList.addEventListener('mouseleave', hideArrow);
     
-    // КРУЧЕНИЕ МОДЕЛИ ПОЛНОСТЬЮ УБРАНО! Она стоит ровно.
-
-    // Плавное интерполированное движение для правой руки
-    if (boneShoulderR) {
-      boneShoulderR.rotation.x += (targetRot.shoulderRX - boneShoulderR.rotation.x) * 0.1;
-      boneShoulderR.rotation.z += (targetRot.shoulderRZ - boneShoulderR.rotation.z) * 0.1;
-    }
-    if (boneHandR) {
-      boneHandR.rotation.x += (targetRot.handRX - boneHandR.rotation.x) * 0.1;
-      boneHandR.rotation.z += (targetRot.handRZ - boneHandR.rotation.z) * 0.1;
-    }
-
-    // Плавное интерполированное движение для левой руки
-    if (boneShoulderL) {
-      boneShoulderL.rotation.x += (targetRot.shoulderLX - boneShoulderL.rotation.x) * 0.1;
-      boneShoulderL.rotation.z += (targetRot.shoulderLZ - boneShoulderL.rotation.z) * 0.1;
-    }
-    if (boneHandL) {
-      boneHandL.rotation.x += (targetRot.handLX - boneHandL.rotation.x) * 0.1;
-      boneHandL.rotation.z += (targetRot.handLZ - boneHandL.rotation.z) * 0.1;
-    }
-
-    renderer.render(scene, camera);
+    const menuLinks = menuList.querySelectorAll('a');
+    menuLinks.forEach((link) => {
+      link.addEventListener('mouseenter', moveArrow);
+      link.addEventListener('focus', moveArrow);
+      link.addEventListener('click', () => {
+        siteMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hideArrow();
+      });
+    });
   }
-  animate();
-}
 
-// --- 2. СВЯЗУЮЩИЕ ЛИНИИ СЛОЯ 2 (УЛЬТРАТОНКИЕ НАПРОТИВ КРАЯ) ---
-function drawLayer2Lines() {
-  if (!canvas || !centerModel) return;
+/* -------------------------------------------------------------
+   * 2. DIAGRAM SVG CONNECTING LINES
+   * ------------------------------------------------------------- */
+  const wrap = document.getElementById('diagramWrap');
+  const svg = document.getElementById('linesSvg');
 
-  canvas.innerHTML = '';
-  const canvasRect = canvas.getBoundingClientRect();
-  const modelRect = centerModel.getBoundingClientRect();
+  function drawLines() {
+    if (!wrap || !svg) return;
+    const wrapRect = wrap.getBoundingClientRect();
+    if (wrapRect.width < 1 || wrapRect.height < 1) return;
 
-  const centerX = (modelRect.left + modelRect.width / 2) - canvasRect.left;
-  // Линия выходит красивой анатомической точкой из верхней части груди
-  const centerY = (modelRect.top + modelRect.height / 2) - canvasRect.top - 60; 
+    const W = wrapRect.width;
+    const H = wrapRect.height;
+    const chestX = W / 2;
 
-  projectNodes.forEach(node => {
-    const nodeRect = node.getBoundingClientRect();
-    const imgWrap = node.querySelector('.node-img-wrap');
-    const imgRect = imgWrap.getBoundingClientRect();
-    const projectId = node.getAttribute('data-project');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    const isLeftColumn = (nodeRect.left - canvasRect.left) < canvasRect.width / 2;
-    
-    let nodeTargetX = 0;
-    if (isLeftColumn) {
-      nodeTargetX = imgRect.right - canvasRect.left + 5; 
-    } else {
-      nodeTargetX = imgRect.left - canvasRect.left - 5;  
-    }
-    const nodeTargetY = (imgRect.top + imgRect.height / 2) - canvasRect.top;
+    const favItems = wrap.querySelectorAll('.fav-item');
+    favItems.forEach((item) => {
+      const img = item.querySelector('img');
+      if (!img) return;
 
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', centerX);
-    line.setAttribute('y1', centerY);
-    line.setAttribute('x2', nodeTargetX);
-    line.setAttribute('y2', nodeTargetY);
-    line.setAttribute('class', 'project-line');
-    line.setAttribute('id', `line-${projectId}`);
-    canvas.appendChild(line);
+      const r = img.getBoundingClientRect();
+      const side = item.dataset.side === '-1' ? -1 : 1;
+      const numEl = item.querySelector('.num');
+      const num = numEl ? numEl.textContent.trim() : '';
 
-    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dot.setAttribute('cx', nodeTargetX);
-    dot.setAttribute('cy', nodeTargetY);
-    dot.setAttribute('r', '1.8'); // Точка сделана еще меньше и деликатнее
-    dot.setAttribute('class', 'line-dot');
-    dot.setAttribute('id', `dot-${projectId}`);
-    canvas.appendChild(dot);
-  });
-}
+      // Точка привязки к внутреннему краю фотографии
+      const edgeX = (side < 0 ? r.right : r.left) - wrapRect.left;
+      const edgeY = (r.top + r.height / 2) - wrapRect.top;
 
-// --- 3. СВЯЗУЮЩИЕ ЛИНИИ СЛОЯ 3 ---
-function drawLayer3Lines() {
-  if (!categoriesLinesCanvas || categoryNodes.length === 0) return;
-  if (window.innerWidth <= 576) {
-    categoriesLinesCanvas.innerHTML = '';
-    return;
+      let points = [];
+
+      switch (num) {
+        case '001':
+          // Диагональ вниз-вправо, затем горизонтальный вход в шею
+          points = [
+            [edgeX, edgeY],
+            [chestX - W * 0.11, edgeY + H * 0.09],
+            [chestX - W * 0.03, edgeY + H * 0.09]
+          ];
+          break;
+
+        case '002':
+          // Строгая горизонталь от фото прямо в верхнюю часть груди
+          points = [
+            [edgeX, edgeY],
+            [chestX - W * 0.03, edgeY]
+          ];
+          break;
+
+        case '003':
+          // Диагональ вверх-вправо, затем горизонтальный вход в талию
+          points = [
+            [edgeX, edgeY],
+            [chestX - W * 0.10, edgeY - H * 0.04],
+            [chestX - W * 0.03, edgeY - H * 0.04]
+          ];
+          break;
+
+        case '004':
+          // Прямая диагональ вверх-вправо в область бедер
+          points = [
+            [edgeX, edgeY],
+            [chestX - W * 0.02, H * 0.63]
+          ];
+          break;
+
+        case '005':
+          // Прямая диагональ вниз-влево в область плеча
+          points = [
+            [edgeX, edgeY],
+            [chestX + W * 0.03, H * 0.28]
+          ];
+          break;
+
+        case '006':
+          // Горизонталь под 005 -> ступенчатый спуск вниз -> горизонталь в грудь
+          points = [
+            [edgeX, edgeY],
+            [chestX + W * 0.12, edgeY],
+            [chestX + W * 0.12, H * 0.36],
+            [chestX + W * 0.04, H * 0.36]
+          ];
+          break;
+
+        case '007':
+          // Горизонталь влево -> спуск ступеней -> горизонталь в талию
+          points = [
+            [edgeX, edgeY],
+            [chestX + W * 0.10, edgeY],
+            [chestX + W * 0.10, edgeY + H * 0.08],
+            [chestX + W * 0.03, edgeY + H * 0.08]
+          ];
+          break;
+
+        case '008':
+          // Прямая диагональ вверх-влево в основание модели
+          points = [
+            [edgeX, edgeY],
+            [chestX + W * 0.02, H * 0.70]
+          ];
+          break;
+
+        default:
+          points = [
+            [edgeX, edgeY],
+            [chestX, edgeY]
+          ];
+          break;
+      }
+
+      const polyPoints = points.map((p) => `${p[0]},${p[1]}`).join(' ');
+      const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      poly.setAttribute('points', polyPoints);
+      svg.appendChild(poly);
+    });
   }
-  categoriesLinesCanvas.innerHTML = '';
-  const canvasRect = categoriesLinesCanvas.getBoundingClientRect();
-  const connections = [[0, 1], [1, 4], [4, 5], [5, 3], [3, 2], [2, 0], [0, 3], [1, 3], [4, 3], [1, 2]];
 
-  connections.forEach(([fromIndex, toIndex]) => {
-    const fromNode = categoryNodes[fromIndex];
-    const toNode = categoryNodes[toIndex];
-    if (!fromNode || !toNode) return;
-
-    const fromRect = fromNode.querySelector('img').getBoundingClientRect();
-    const toRect = toNode.querySelector('img').getBoundingClientRect();
-
-    const x1 = (fromRect.left + fromRect.width / 2) - canvasRect.left;
-    const y1 = (fromRect.top + fromRect.height / 2) - canvasRect.top;
-    const x2 = (toRect.left + toRect.width / 2) - canvasRect.left;
-    const y2 = (toRect.top + toRect.height / 2) - canvasRect.top;
-
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-    line.setAttribute('class', 'project-line');
-    categoriesLinesCanvas.appendChild(line);
-  });
-}
-
-const resizeObserver = new ResizeObserver(() => {
-  if (camera && renderer && centerModel) {
-    camera.aspect = centerModel.clientWidth / centerModel.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(centerModel.clientWidth, centerModel.clientHeight);
+  let resizeTimer;
+  function scheduleDraw() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(drawLines, 80);
   }
-  drawLayer2Lines();
-  drawLayer3Lines();
-});
-if (centerModel) resizeObserver.observe(centerModel.parentElement);
 
-// --- 4. ИНТЕЛЛЕКТУАЛЬНАЯ РАБОТА РУК ПРИ КЛИКАХ ---
-projectNodes.forEach(node => {
-  node.addEventListener('click', (event) => {
-    event.stopPropagation();
-    const projectId = node.getAttribute('data-project');
-    const project = projectsData[projectId];
+  window.addEventListener('load', drawLines);
+  window.addEventListener('resize', scheduleDraw);
 
-    if (project) {
-      tooltipTitle.textContent = project.title;
-      tooltipDesc.textContent = project.desc;
-      tooltipBtn.href = project.link;
-      tooltip.style.display = 'flex';
-
-      const canvasRect = canvas.getBoundingClientRect();
-      const nodeRect = node.getBoundingClientRect();
-      
-      // Вычисляем, с какой стороны находится карточка
-      const isLeftColumn = (nodeRect.left - canvasRect.left) < canvasRect.width / 2;
-      
-      // Рассчитываем динамический угол наклона в радианах
-      const modelRect = centerModel.getBoundingClientRect();
-      const deltaX = (nodeRect.left + nodeRect.width / 2) - (modelRect.left + modelRect.width / 2);
-      const deltaY = (nodeRect.top + nodeRect.height / 2) - (modelRect.top + modelRect.height / 2);
-      const angle = Math.atan2(deltaY, deltaX);
-
-      if (isLeftColumn) {
-        // ЛЕВАЯ СТОРОНА: Тянемся левой рукой, правую опускаем в дефолт
-        targetRot.shoulderLX = 0.4;
-        targetRot.shoulderLZ = angle - Math.PI; // Коррекция вектора левой стороны
-        targetRot.handLX = 0.3;
-        targetRot.handLZ = 0.2;
-
-        // Сброс правой руки по шву
-        targetRot.shoulderRX = 0; targetRot.shoulderRZ = 0;
-        targetRot.handRX = 0; targetRot.handRZ = 0;
+  if (wrap) {
+    wrap.querySelectorAll('.fav-item img').forEach((img) => {
+      if (img.complete) {
+        drawLines();
       } else {
-        // ПРАВАЯ СТОРОНА: Тянемся правой рукой, левую расслабляем
-        targetRot.shoulderRX = 0.4;
-        targetRot.shoulderRZ = angle; 
-        targetRot.handRX = 0.3;
-        targetRot.handRZ = 0.2;
-
-        // Сброс левой руки по шву
-        targetRot.shoulderLX = 0; targetRot.shoulderLZ = 0;
-        targetRot.handLX = 0; targetRot.handLZ = 0;
+        img.addEventListener('load', scheduleDraw);
       }
+    });
+  }
 
-      // Позиционирование всплывающего окна
-      if (window.innerWidth > 768) {
-        const rect = node.getBoundingClientRect();
-        const parentRect = node.parentElement.getBoundingClientRect();
-        const relativeTop = rect.top - parentRect.top;
-        const relativeLeft = rect.left - parentRect.left;
+  setTimeout(drawLines, 50);
+  setTimeout(drawLines, 400);
 
-        if (relativeLeft > parentRect.width / 2) {
-          tooltip.style.left = `${relativeLeft - 280}px`; 
-        } else {
-          tooltip.style.left = `${relativeLeft + rect.width + 15}px`;
-        }
-        tooltip.style.top = `${relativeTop}px`;
-      }
+  /* -------------------------------------------------------------
+   * 3. CAROUSEL & LIGHTBOX
+   * ------------------------------------------------------------- */
+  const carousel = document.getElementById('carousel');
+  const carPrev = document.getElementById('carPrev');
+  const carNext = document.getElementById('carNext');
+  const carImgs = Array.from(document.querySelectorAll('#carousel .car-img'));
 
-      // Менеджмент классов стилей
-      document.querySelectorAll('#linesCanvas .project-line').forEach(l => l.classList.remove('active'));
-      const activeLine = document.getElementById(`line-${projectId}`);
-      if (activeLine) activeLine.classList.add('active');
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+  const lbClose = document.getElementById('lbClose');
+  let lbIndex = 0;
 
-      document.querySelectorAll('#linesCanvas .line-dot').forEach(d => d.classList.remove('active'));
-      const activeDot = document.getElementById(`dot-${projectId}`);
-      if (activeDot) activeDot.classList.add('active');
+  if (carPrev && carousel) {
+    carPrev.addEventListener('click', () => carousel.scrollBy({ left: -340, behavior: 'smooth' }));
+  }
+  if (carNext && carousel) {
+    carNext.addEventListener('click', () => carousel.scrollBy({ left: 340, behavior: 'smooth' }));
+  }
 
-      projectNodes.forEach(n => n.classList.remove('active'));
-      node.classList.add('active');
-    }
+  function showLightboxImage(i) {
+    if (!carImgs.length) return;
+    lbIndex = (i + carImgs.length) % carImgs.length;
+    lbImg.src = carImgs[lbIndex].src;
+    lbImg.alt = carImgs[lbIndex].alt;
+  }
+
+  function openLightbox(i) {
+    showLightboxImage(i);
+    if (lightbox) lightbox.classList.add('open');
+  }
+
+  function closeLightbox() {
+    if (lightbox) lightbox.classList.remove('open');
+  }
+
+  carImgs.forEach((img, index) => {
+    img.addEventListener('click', () => openLightbox(index));
+  });
+
+  if (lbPrev) lbPrev.addEventListener('click', () => showLightboxImage(lbIndex - 1));
+  if (lbNext) lbNext.addEventListener('click', () => showLightboxImage(lbIndex + 1));
+  if (lbClose) lbClose.addEventListener('click', closeLightbox);
+
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox || !lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showLightboxImage(lbIndex - 1);
+    if (e.key === 'ArrowRight') showLightboxImage(lbIndex + 1);
   });
 });
-
-const closeTooltip = () => {
-  tooltip.style.display = 'none';
-  document.querySelectorAll('#linesCanvas .project-line').forEach(l => l.classList.remove('active'));
-  document.querySelectorAll('#linesCanvas .line-dot').forEach(d => d.classList.remove('active'));
-  projectNodes.forEach(n => n.classList.remove('active'));
-  
-  // Возвращаем обе руки в спокойное положение
-  targetRot = {
-    shoulderRX: 0, shoulderRZ: 0, handRX: 0, handRZ: 0,
-    shoulderLX: 0, shoulderLZ: 0, handLX: 0, handLZ: 0
-  };
-};
-tooltipClose.addEventListener('click', (e) => { e.stopPropagation(); closeTooltip(); });
-document.addEventListener('click', closeTooltip);
-
-// --- 5. КЛИКИ ПО КАТЕГОРИЯМ СЛОЯ 3 ---
-categoryNodes.forEach(node => {
-  node.addEventListener('click', () => {
-    const targetLink = node.getAttribute('data-link');
-    if (targetLink) window.open(targetLink, '_blank');
-  });
-});
-
-// --- 6. БЕСКОНЕЧНЫЙ СЛАЙДЕР СЛОЯ 4 ---
-if (sliderTrack) {
-  let currentIndex = 0;
-  const slides = sliderTrack.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  let slidesPerView = window.innerWidth <= 768 ? 2 : 5;
-  let maxIndex = Math.max(0, totalSlides - slidesPerView);
-  let autoScrollInterval;
-
-  const updateSliderPosition = () => {
-    if(slides.length === 0) return;
-    const slideWidth = slides[0].getBoundingClientRect().width;
-    const gap = 20;
-    const offset = currentIndex * (slideWidth + gap);
-    sliderTrack.style.transform = `translateX(-${offset}px)`;
-  };
-
-  const moveNext = () => {
-    currentIndex = currentIndex >= maxIndex ? 0 : currentIndex + 1;
-    updateSliderPosition();
-  };
-  const movePrev = () => {
-    currentIndex = currentIndex <= 0 ? maxIndex : currentIndex - 1;
-    updateSliderPosition();
-  };
-
-  if (nextBtn) nextBtn.addEventListener('click', () => { moveNext(); startAutoPlay(); });
-  if (prevBtn) prevBtn.addEventListener('click', () => { movePrev(); startAutoPlay(); });
-
-  const startAutoPlay = () => { stopAutoPlay(); autoScrollInterval = setInterval(moveNext, 4000); };
-  const stopAutoPlay = () => { if (autoScrollInterval) clearInterval(autoScrollInterval); };
-
-  sliderTrack.addEventListener('mouseenter', stopAutoPlay);
-  sliderTrack.addEventListener('mouseleave', startAutoPlay);
-  window.addEventListener('resize', () => {
-    slidesPerView = window.innerWidth <= 768 ? 2 : 5;
-    maxIndex = Math.max(0, totalSlides - slidesPerView);
-    updateSliderPosition();
-  });
-
-  setTimeout(() => { updateSliderPosition(); startAutoPlay(); }, 300);
-}

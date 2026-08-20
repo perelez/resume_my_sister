@@ -16,7 +16,7 @@
 
   <!-- HERO SECTION -->
   <section class="hero stack-panel" id="top">
-    <video autoplay muted loop playsinline src="/hero-video.mp4"></video>
+    <video autoplay muted loop playsinline preload="auto" src="/hero-video.mp4"></video>
     
     <button class="hamburger" id="hamburgerBtn" aria-label="Меню" aria-expanded="false" aria-controls="siteMenu">
       <span></span><span></span><span></span>
@@ -59,10 +59,10 @@
 
       <!-- Left Column Projects -->
       <div class="fav-col fav-col-left">
-        <a class="fav-item fi-1" href="#" data-side="-1" data-row="0.12">
+        <div class="fav-item fi-1" href="#" data-side="-1" data-row="0.12">
           <img src="/projects/p1.jfif" alt="Проект 001">
           <span class="num">001</span>
-        </a>
+        </div>
         <div class="fav-item fi-2" data-side="-1" data-row="0.36">
           <img src="/projects/p2.jfif" alt="Проект 002">
           <span class="num">002</span>
@@ -104,48 +104,100 @@
   </section>
 
   <!-- MINDMAP SECTION -->
+   
   <section class="mindmap stack-panel" id="mindmap">
-    <div class="mindmap-inner">
-      <svg viewBox="0 0 1400 820" xmlns="http://www.w3.org/2000/svg">
-        <polyline class="netline" fill="none" points="190,470 205,635 640,105 645,415 925,265 955,665"/>
+    <!-- Фоновое видео (если есть)
+    <video autoplay muted loop playsinline class="mindmap-bg-video">
+      <source src="/categories-bg-video.mp4" type="video/mp4">
+    </video> -->
+    <img src="/mindmap-bg.jfif" class="mindmap-bg-img" alt="Background">
+    <div class="mindmap-overlay"></div>
 
-        <text x="190" y="575" text-anchor="middle">креативный дирекшн</text>
-        <text x="115" y="745">архитектура</text>
-        <text x="115" y="765">проектирование</text>
-        <text x="735" y="100">форумы</text>
-        <text x="735" y="120">продюсирование</text>
-        <text x="620" y="530">концепты</text>
-        <text x="620" y="550">r&amp;d</text>
-        <text x="730" y="140">публикации</text>
-        <text x="1060" y="670">контакты</text>
-      </svg>
+    <!-- SVG-контейнер для отрисовки линий -->
+    <svg class="mindmap-lines" id="mindmapLines"></svg>
+
+    <!-- Контейнер с узлами (карточки с фото) -->
+    <div class="nodes-container" id="nodesContainer">
+      
+      <div class="mm-node" id="node-creative">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="/mm/mm-creative (1).png" alt="Креативный дирекшн"></div>
+        <div class="mm-label">креативный дирекшн</div>
+      </div>
+
+      <div class="mm-node" id="node-forums">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="/mm/mm-forums (1).png" alt="Форумы"></div>
+        <div class="mm-label">форумы<br>продюсирование</div>
+      </div>
+
+      <div class="mm-node" id="node-concepts">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="/mm/mm-concepts (1).png" alt="Концепты"></div>
+        <div class="mm-label">концепты<br>r&d</div>
+      </div>
+
+      <div class="mm-node" id="node-arch">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="/mm/mm-architecture (1).png" alt="Архитектура"></div>
+        <div class="mm-label">архитектура<br>проектирование</div>
+      </div>
+
+      <div class="mm-node" id="node-pub">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="/mm/mm-publications (1).png" alt="Публикации"></div>
+        <div class="mm-label">публикации</div>
+      </div>
+
+      <div class="mm-node" id="node-contacts">
+        <div class="mm-frame"></div>
+        <div class="mm-img-wrap"><img src="mm/mm-contacts (1).png" alt="Контакты"></div>
+        <div class="mm-label">контакты</div>
+      </div>
+
     </div>
+    <!-- Нижняя подпись -->
+    <div class="mm-footer">[about]</div>
   </section>
 
   <!-- CAROUSEL & FOOTER WRAPPER -->
-  <div class="mail-block stack-panel">
-    <section class="carousel-section">
-      <div class="carousel" id="carousel">
-        <img class="car-img" src="/projects/p1.jfif" alt="Фото 01">
-        <img class="car-img" src="/projects/p2.jfif" alt="Фото 02">
-        <img class="car-img" src="/projects/p3.jfif" alt="Фото 03">
-        <img class="car-img" src="/projects/p4.jfif" alt="Фото 04">
-        <img class="car-img" src="/projects/p5.jfif" alt="Фото 05">
-        <img class="car-img" src="/projects/p6.jfif" alt="Фото 06">
-        <img class="car-img" src="/projects/p7.jfif" alt="Фото 07">
-        <img class="car-img" src="/projects/p8.jfif" alt="Фото 08">
+<section class="about-section stack-panel" id="about">
+  
+  <!-- Обертка карусели со стрелками по бокам -->
+  <div class="carousel-wrapper">
+    <button class="carousel-btn prev-btn" id="prevBtn">
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Контейнер-маска (обрезает края) -->
+    <div class="carousel-track-container">
+      <div class="carousel-track" id="carouselTrack">
+        <!-- Слайды генерируются через JS -->
       </div>
-      
-      <div class="carousel-controls">
-        <button class="car-btn" id="carPrev" aria-label="Назад">‹</button>
-        <button class="car-btn" id="carNext" aria-label="Вперёд">›</button>
-      </div>
-      
-      <div class="carousel-about">
-        <div class="label">[about]</div>
-        <p>На пересечении архитектуры, сценографии, пространственной драматургии, мультимедиа и культурных проектов.</p>
-      </div>
-    </section>
+    </div>
+
+    <button class="carousel-btn next-btn" id="nextBtn">
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Текстовый блок снизу -->
+  <div class="about-footer">
+    <div class="about-tag">[about]</div>
+    <p class="about-desc">
+      На пересечении архитектуры, сценографии,<br>
+      пространственной драматургии, мультимедиа и<br>
+      культурных проектов.
+    </p>
+    <!-- Огромный email шрифтом Anton -->
+    <a href="mailto:novikova.nastyaw@gmail.com" class="about-email">novikova.nastyaw@gmail.com</a>
+  </div>
+  
+</section>
 
     <!-- LIGHTBOX MODAL -->
     <div class="lightbox" id="lightbox">
@@ -155,11 +207,6 @@
       <button class="lb-nav lb-next" id="lbNext" aria-label="Следующее фото">›</button>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="footer" id="contact">
-      <a class="email" href="mailto:novikova.nastyaw@gmail.com">novikova.nastyaw@gmail.com</a>
-    </footer>
-  </div>
 
   <!-- JS из папки src -->
   <script type="module" src="/src/figure-animation.js"></script>

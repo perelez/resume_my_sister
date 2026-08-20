@@ -186,62 +186,169 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(drawLines, 50);
   setTimeout(drawLines, 400);
 
-  /* -------------------------------------------------------------
+// ==============================================================
+// ОТРИСОВКА ЛИНИЙ ДЛЯ 3-ГО СЛАЙДА (MINDMAP)
+// ==============================================================
+function drawMindmapLines() {
+  const svg = document.getElementById('mindmapLines');
+  const container = document.getElementById('nodesContainer');
+  
+  if (!svg || !container) return;
+
+  const edges = [
+    ['node-creative', 'node-forums'],
+    ['node-creative', 'node-arch'],
+    ['node-forums', 'node-concepts'],
+    ['node-arch', 'node-concepts'],
+    ['node-concepts', 'node-pub'],
+    ['node-pub', 'node-contacts']
+  ];
+
+  svg.innerHTML = '';
+  const containerRect = container.getBoundingClientRect();
+
+  // 1. Отрисовка соединительных линий
+  edges.forEach(edge => {
+    const el1 = document.getElementById(edge[0]);
+    const el2 = document.getElementById(edge[1]);
+    if (!el1 || !el2) return;
+
+    const wrap1 = el1.querySelector('.mm-img-wrap');
+    const wrap2 = el2.querySelector('.mm-img-wrap');
+    
+    const rect1 = wrap1.getBoundingClientRect();
+    const rect2 = wrap2.getBoundingClientRect();
+
+    const x1 = (rect1.left + rect1.width / 2) - containerRect.left;
+    const y1 = (rect1.top + rect1.height / 2) - containerRect.top;
+    
+    const x2 = (rect2.left + rect2.width / 2) - containerRect.left;
+    const y2 = (rect2.top + rect2.height / 2) - containerRect.top;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'rgba(255, 255, 255, 0.7)');
+    line.setAttribute('stroke-width', '1');
+    
+    svg.appendChild(line);
+  });
+
+  // 2. Отрисовка белых точек поверх фотографий
+  // Собираем все уникальные узлы, чтобы не рисовать точку дважды
+  const uniqueNodes = new Set(edges.flat());
+  
+  uniqueNodes.forEach(nodeId => {
+    const el = document.getElementById(nodeId);
+    if (!el) return;
+    
+    const wrap = el.querySelector('.mm-img-wrap');
+    const rect = wrap.getBoundingClientRect();
+    
+    const cx = (rect.left + rect.width / 2) - containerRect.left;
+    const cy = (rect.top + rect.height / 2) - containerRect.top;
+
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', cx);
+    dot.setAttribute('cy', cy);
+    dot.setAttribute('r', '2.5'); // Размер точки
+    dot.setAttribute('fill', '#ffffff'); // Цвет точки
+    
+    svg.appendChild(dot);
+  });
+}
+
+// Запускаем расчет при загрузке картинок и при любом ресайзе окна
+window.addEventListener('load', drawMindmapLines);
+window.addEventListener('resize', drawMindmapLines);
+// На всякий случай запускаем сразу после готовности DOM
+document.addEventListener('DOMContentLoaded', drawMindmapLines);
+
+ /* -------------------------------------------------------------
    * 3. CAROUSEL & LIGHTBOX
    * ------------------------------------------------------------- */
-  const carousel = document.getElementById('carousel');
-  const carPrev = document.getElementById('carPrev');
-  const carNext = document.getElementById('carNext');
-  const carImgs = Array.from(document.querySelectorAll('#carousel .car-img'));
+function initCarousel() {
+  const track = document.getElementById('carouselTrack');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const container = document.querySelector('.carousel-track-container');
+  
+  if (!track || !container) return;
 
-  const lightbox = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lbImg');
-  const lbPrev = document.getElementById('lbPrev');
-  const lbNext = document.getElementById('lbNext');
-  const lbClose = document.getElementById('lbClose');
-  let lbIndex = 0;
+  // 1. Генерируем 20 слайдов (PNG вместо JPG)
+  for (let i = 1; i <= 20; i++) {
+    const numStr = i < 10 ? `0${i}` : `${i}`;
+    const slideDiv = document.createElement('div');
+    slideDiv.className = 'carousel-slide'; 
+    
+    const img = document.createElement('img');
+    // Исправлено расширение на .png как в файловой системе
+    img.src = `/carousel/carousel-${numStr}.png`; 
+    img.alt = `Project ${numStr}`;
+    
+    img.onerror = () => {
+      img.src = `/projects/p1.jfif`; // Заглушка
+    };
 
-  if (carPrev && carousel) {
-    carPrev.addEventListener('click', () => carousel.scrollBy({ left: -340, behavior: 'smooth' }));
-  }
-  if (carNext && carousel) {
-    carNext.addEventListener('click', () => carousel.scrollBy({ left: 340, behavior: 'smooth' }));
-  }
-
-  function showLightboxImage(i) {
-    if (!carImgs.length) return;
-    lbIndex = (i + carImgs.length) % carImgs.length;
-    lbImg.src = carImgs[lbIndex].src;
-    lbImg.alt = carImgs[lbIndex].alt;
-  }
-
-  function openLightbox(i) {
-    showLightboxImage(i);
-    if (lightbox) lightbox.classList.add('open');
+    slideDiv.appendChild(img);
+    track.appendChild(slideDiv);
   }
 
-  function closeLightbox() {
-    if (lightbox) lightbox.classList.remove('open');
-  }
+  const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+  let currentIndex = Math.floor(slides.length / 2); // Старт с середины
 
-  carImgs.forEach((img, index) => {
-    img.addEventListener('click', () => openLightbox(index));
-  });
-
-  if (lbPrev) lbPrev.addEventListener('click', () => showLightboxImage(lbIndex - 1));
-  if (lbNext) lbNext.addEventListener('click', () => showLightboxImage(lbIndex + 1));
-  if (lbClose) lbClose.addEventListener('click', closeLightbox);
-
-  if (lightbox) {
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
+  // 2. Логика позиционирования
+  function updateCarousel() {
+    // Раздаем классы
+    slides.forEach((slide, index) => {
+      if (index === currentIndex) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
     });
+
+    // 3. Считаем отступы для центрирования
+    const activeSlide = slides[currentIndex];
+    const containerWidth = container.clientWidth;
+    
+    // Получаем координаты центра активного слайда относительно начала трека
+    const slideCenter = activeSlide.offsetLeft + (activeSlide.offsetWidth / 2);
+    // Считаем на сколько пикселей нужно сдвинуть трек
+    const targetX = (containerWidth / 2) - slideCenter;
+    
+    track.style.transform = `translateX(${targetX}px)`;
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox || !lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') showLightboxImage(lbIndex - 1);
-    if (e.key === 'ArrowRight') showLightboxImage(lbIndex + 1);
+  // 4. Слушатели кликов
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < slides.length - 1) {
+      currentIndex++;
+      updateCarousel();
+    }
   });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  });
+
+  slides.forEach((slide, index) => {
+    slide.addEventListener('click', () => {
+      currentIndex = index;
+      updateCarousel();
+    });
+  });
+
+  // Пересчет при изменении размера окна
+  window.addEventListener('resize', updateCarousel);
+  
+  // Даем браузеру время отрендерить картинки, чтобы правильно посчитать их ширину
+  setTimeout(updateCarousel, 150);
+}
+initCarousel();
 });

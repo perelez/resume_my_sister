@@ -436,10 +436,15 @@ diagramWrap.addEventListener('mouseleave', () => {
     }
   }
 
-  let bodyT = 0;
+let bodyT = 0;
   let lastRealT = null;
+  let lastMouseUpdate = 0;
+  let isAnimating = false;
+  let animFrameId = null;
 
   function loop(now) {
+    if (!isAnimating) return; // Полная остановка цикла, когда слайд скрыт
+
     const realT = (now / 1000) * SPEED;
     if (lastRealT === null) lastRealT = realT;
     const dt = Math.min(realT - lastRealT, 0.1); 
@@ -451,13 +456,36 @@ diagramWrap.addEventListener('mouseleave', () => {
 
     update(bodyT);
     updateStrands(bodyT);
-    applyCursorField();
-    draw(bodyT, realT);
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
 
-  // Исправлено: привязка к элементам .fav-item из твоей HTML-верстки
+    if (now - lastMouseUpdate > 15) {
+      applyCursorField();
+      lastMouseUpdate = now;
+    }
+
+    draw(bodyT, realT);
+    animFrameId = requestAnimationFrame(loop);
+  }
+  
+  // Запускаем и останавливаем Canvas при прокрутке
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (!isAnimating) {
+          isAnimating = true;
+          lastRealT = null;
+          animFrameId = requestAnimationFrame(loop);
+        }
+      } else {
+        isAnimating = false;
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+      }
+    });
+  }, { threshold: 0.01 });
+  
+  const favSection = document.getElementById('favorites');
+  if (favSection) observer.observe(favSection);
+
+  // Привязка hover-эффектов к элементам карточек проектов
   document.querySelectorAll('.fav-item').forEach((item) => {
     const side = item.dataset.side === '-1' ? 2 : 3;
     const rowPct = parseFloat(item.dataset.row || '0.5');
@@ -474,7 +502,7 @@ diagramWrap.addEventListener('mouseleave', () => {
       reach[side].goal = 0;
     });
   });
-}
+} // Закрывающая скобка initFigureAnimation()
 
 // Автоматический запуск анимации после загрузки DOM
 if (document.readyState === 'loading') {

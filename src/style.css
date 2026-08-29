@@ -12,9 +12,17 @@
   padding: 0;
   box-sizing: border-box;
 }
+*, *::before, *::after {
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -51,6 +59,7 @@ img {
   color: var(--grey);
 }
 
+
 /* ---------- HERO SECTION ---------- */
 
 /* .hero video {
@@ -71,10 +80,10 @@ img {
 } */
 
 .hamburger {
-  position: absolute;
+  position: fixed; /* БЫЛО absolute */
   top: 26px;
-  left: 28px;
-  z-index: 20;
+  left: 5px;
+  z-index: 999; /* Высокий индекс поверх всех слоев */
   width: 26px;
   height: 18px;
   display: flex;
@@ -89,32 +98,54 @@ img {
   display: block;
   height: 2px;
   width: 100%;
-  background: #fff;
+  background: #bebdbd;
+  transition: background 0.3s ease; /* Добавили плавность цвета */
 }
 
 .menu {
-  position: absolute;
+  position: fixed;
   top: 58px;
-  left: 28px;
-  z-index: 15;
+  left: 5px;
+  z-index: 998;
   max-width: calc(100vw - 56px);
   max-height: 0;
   overflow: hidden;
   transition: max-height .38s cubic-bezier(.4,0,.2,1);
 }
 
-.menu.open {
-  max-height: 340px;
-}
-
 .menu-list {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-top: 4px;
+  gap: 4px;
+  padding: 14px 20px;                     /* Внутренние отступы, чтобы текст не лип к краям */
   font-size: clamp(14px, 2vw, 19px);
-  color: #fff;
+  color: #ffffff;
+  
+  /* === ПОЛУПРОЗРАЧНЫЙ ФОН И СКРУГЛЕНИЕ === */
+  background: rgba(0, 0, 0, 0.65);        /* Полупрозрачный черный фон (65% темноты) */
+  backdrop-filter: blur(12px);            /* Эффект матового размытия заднего плана */
+  -webkit-backdrop-filter: blur(12px);    /* Поддержка для Safari */
+  border-radius: 14px;                    /* Скругление краев */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Тонкая эстетичная рамка */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* Легкая мягкая тень */
+  
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* === НОВЫЙ КОД ДЛЯ ЧЕРНОЙ ТЕМЫ (добавь куда-нибудь рядом) === */
+
+.menu-list.dark-mode {
+  color: #000;
+  background: rgba(255, 255, 255, 0.75);  /* Светлое полупрозрачное стекло на белом слое */
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.menu-list.dark-mode .menu-arrow {
+  color: #000;
+}
+
+.menu.open {
+  max-height: 340px;
 }
 
 .menu-list a {
@@ -152,7 +183,7 @@ img {
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  color: #e8e8e8;
+  color: #bebdbd;
   font-size: 12px;
   letter-spacing: .08em;
 }
@@ -163,12 +194,12 @@ img {
   right: 0;
   bottom: 56px;
   z-index: 10;
-  padding: 0 28px;
-  color: #fff;
+  padding: 0 5px;
+  color: #ffffff;
 }
 
 .hero-title-block h1 {
-  font-size: clamp(48px, 9.5vw, 150px);
+  font-size: clamp(48px, 8.7vw, 170px);
   line-height: .92;
   white-space: nowrap;
 }
@@ -312,8 +343,8 @@ img {
 
 .lines-svg polyline {
   fill: none;
-  stroke: #B9B9B9;
-  stroke-width: 1;
+  stroke: #dadada;
+  stroke-width: 0.8;
 }
 
 .watermark {
@@ -539,9 +570,8 @@ img {
 /* Состояние центральной фотки */
 .carousel-slide.active {
   opacity: 1;
-  transform: scale(1.45); /* Увеличиваем центральную фотку */
   z-index: 2;
-  margin: 0 4vw; /* Раздвигаем соседей */
+  margin: 0 1vw; /* Раздвигаем соседей */
 }
 
 /* Кнопки переключения */
@@ -592,7 +622,7 @@ img {
 
 .about-email {
   font-family: 'Anton', sans-serif;
-  font-size: clamp(30px, 9vw, 150px);
+  font-size: clamp(30px, 7vw, 150px);
   color: #333333; /* Темно-серый цвет из макета */
   text-decoration: none;
   letter-spacing: 0.02em;
@@ -672,12 +702,20 @@ img {
   height: 100dvh; /* Строго 100% видимой высоты экрана */
   width: 100vw;
   overflow: hidden; /* Запрещаем скролл внутри самого слайда */
+  scroll-snap-align: start;
 }
 
 .hero.stack-panel { z-index: 1; }
 .favorites.stack-panel { z-index: 2; }
 .mindmap.stack-panel { z-index: 3; }
 .mail-block.stack-panel { z-index: 4; }
+
+/* === ЧАСТИЦЫ ОТ МОДЕЛИ К ФОТО === */
+.flow-particle {
+  pointer-events: none;
+  opacity: 0.95;
+  transition: opacity 0.2s ease;
+}
 
 
 /* ---------- RESPONSIVE MEDIA QUERIES ----------*/
@@ -720,7 +758,7 @@ img {
     width: 100%;
     
     /* Указывай нужный процент высоты от всего слайда */
-    height: 80%; 
+    height: 85%; 
     
     transform: translateY(-50%); /* Центрирование фигуры по вертикали */
   }
@@ -768,4 +806,30 @@ img {
   .fav-col-right .fi-2 { width: 30%; }
   .fav-col-right .fi-3 { width: 36%; }
   .fav-col-right .fi-4 { width: 31%; }
+}
+
+/* Если высота экрана меньше 700px */
+@media (max-height: 700px) {
+  .carousel-slide img {
+    height: 26dvh;
+  }
+  .about-desc {
+    font-size: 12px;
+    margin-bottom: 1.5dvh;
+  }
+}
+
+/* Если высота экрана очень маленькая (меньше 550px) */
+@media (max-height: 550px) {
+  .carousel-slide img {
+    height: 22dvh;
+  }
+  .about-tag {
+    display: none; /* Скрываем тег, чтобы освободить место */
+  }
+  .about-desc {
+    font-size: 11px;
+    line-height: 1.2;
+    margin-bottom: 1dvh;
+  }
 }

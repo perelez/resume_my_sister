@@ -485,23 +485,6 @@ let bodyT = 0;
   const favSection = document.getElementById('favorites');
   if (favSection) observer.observe(favSection);
 
-  // Привязка hover-эффектов к элементам карточек проектов
-  document.querySelectorAll('.fav-item').forEach((item) => {
-    const side = item.dataset.side === '-1' ? 2 : 3;
-    const rowPct = parseFloat(item.dataset.row || '0.5');
-    const targetX = (side === 2 ? 0.06 : 0.94) * W;
-    const targetY = rowPct * H;
-
-    item.addEventListener('mouseenter', () => {
-      const r = reach[side];
-      r.tx = targetX; 
-      r.ty = targetY; 
-      r.goal = 1;
-    });
-    item.addEventListener('mouseleave', () => {
-      reach[side].goal = 0;
-    });
-  });
 } // Закрывающая скобка initFigureAnimation()
 
 // Автоматический запуск анимации после загрузки DOM

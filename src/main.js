@@ -297,6 +297,107 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+   /* -------------------------------------------------------------
+   * НОВОЕ: точный расчёт размеров .diagram-wrap через JS.
+   * Меряем реальную высоту, занятую заголовком [favorite] +
+   * "избранные проекты", и вписываем рамку 2.5:1 в то, что
+   * осталось — по принципу object-fit: contain, без обрезаний.
+   * ------------------------------------------------------------- */
+  function sizeDiagramWrap() {
+    const favSection = document.getElementById('favorites');
+    const wrap = document.getElementById('diagramWrap');
+    if (!favSection || !wrap) return;
+
+    const label = favSection.querySelector('.label');
+    const title = favSection.querySelector('h2');
+
+    const favRect = favSection.getBoundingClientRect();
+    const favStyle = getComputedStyle(favSection);
+    const padTop = parseFloat(favStyle.paddingTop) || 0;
+    const padBottom = parseFloat(favStyle.paddingBottom) || 0;
+
+    // сколько места реально занял заголовочный блок (label + h2)
+    let headerHeight = 0;
+    if (label && title) {
+      headerHeight = title.getBoundingClientRect().bottom - label.getBoundingClientRect().top;
+    }
+
+    const gapAfterHeader = 24; // небольшой зазор перед рамкой
+    const availableHeight = favRect.height - padTop - padBottom - headerHeight - gapAfterHeader;
+    const availableWidth = Math.min(window.innerWidth * 0.96, favRect.width);
+
+    const RATIO = 2.5; // ширина к высоте — рамка с фото свободно сжимается, без минимума
+    let w = availableWidth;
+    let h = w / RATIO;
+
+    if (h > availableHeight) {
+      h = Math.max(availableHeight, 0);
+      w = h * RATIO;
+    }
+
+    wrap.style.width = w + 'px';
+    wrap.style.height = h + 'px';
+
+    // размер и позицию фигуры считаем отдельно — у неё свой минимум
+    sizeFigureCanvas(wrap);
+
+    // после изменения размеров пересчитываем соединительные линии
+    drawLines();
+  }
+
+  /* -------------------------------------------------------------
+   * НОВОЕ: у фигуры (canvas) собственный минимальный размер,
+   * независимый от рамки с фото. Рамка и фото продолжают свободно
+   * сжиматься, а фигура при этом не мельчает ниже читаемого размера —
+   * если места не хватает, она просто выходит за пределы рамки
+   * (центрированно), а не ужимается вместе с ней.
+   * ------------------------------------------------------------- */
+  function sizeFigureCanvas(wrap) {
+    const figureWrap = wrap.querySelector('.figure-canvas-wrap');
+    const favSection = document.getElementById('favorites');
+    if (!figureWrap) return;
+
+    const wrapW = wrap.clientWidth;
+    const wrapH = wrap.clientHeight;
+
+    // естественные пропорции фигуры — портретные (уже, чем сама рамка)
+    const FIGURE_ASPECT = 0.5; // ширина / высота
+    const MIN_FIGURE_HEIGHT = 500;
+    const MIN_FIGURE_WIDTH = MIN_FIGURE_HEIGHT * FIGURE_ASPECT;
+
+    // по умолчанию фигура вписана в высоту рамки, ширина — по пропорции
+    let figH = wrapH;
+    let figW = wrapH * FIGURE_ASPECT;
+
+    let overflowed = false;
+    if (figH < MIN_FIGURE_HEIGHT) {
+      figH = MIN_FIGURE_HEIGHT;
+      figW = MIN_FIGURE_WIDTH;
+      overflowed = true;
+    }
+
+    figureWrap.style.width = figW + 'px';
+    figureWrap.style.height = figH + 'px';
+    figureWrap.style.left = '50%';
+    figureWrap.style.top = '50%';
+    figureWrap.style.transform = 'translate(-50%, -50%)';
+    figureWrap.style.right = 'auto';
+    figureWrap.style.bottom = 'auto';
+
+    // если фигура вышла за пределы рамки — снимаем overflow:hidden,
+    // чтобы она не обрезалась сверху/снизу
+    favSection.style.overflow = overflowed ? 'visible' : '';
+
+    // сразу пересчитываем сам canvas фигуры под новый размер контейнера
+    if (typeof window.resizeFigureCanvas === 'function') {
+      window.resizeFigureCanvas();
+    }
+  }
+
+  window.addEventListener('load', sizeDiagramWrap);
+  window.addEventListener('resize', sizeDiagramWrap);
+  setTimeout(sizeDiagramWrap, 50);
+  setTimeout(sizeDiagramWrap, 400);
 
   let resizeTimer;
   function scheduleDraw() {
@@ -319,6 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(drawLines, 50);
   setTimeout(drawLines, 400);
+
+  
 
   /* -------------------------------------------------------------
    * 3. MINDMAP LINES
@@ -519,4 +622,5 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateMenuColor);
   window.addEventListener('resize', updateMenuColor);
   updateMenuColor();
+
 });

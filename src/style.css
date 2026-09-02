@@ -245,14 +245,14 @@ img {
 }
 
 .diagram-wrap {
-  height: 100dvh; 
-  width: auto; /* Ширина вычисляется сама благодаря aspect-ratio */
-  max-width: 96vw; /* Защита для узких экранов, чтобы не появилась горизонтальная прокрутка */
-  aspect-ratio: 2.5; /* Железобетонная пропорция сетки */
-  margin: auto; /* Дополнительно центрирует блок в оставшемся пространстве */
+  /* Ширина и высота выставляются в px через JS (см. sizeDiagramWrap в main.js).
+     Так рамка 2.5:1 всегда целиком вписывается в свободное место под
+     заголовком, без обрезаний CSS aspect-ratio при конфликте с flex. */
   position: relative;
   display: flex;
   align-items: stretch;
+  margin: auto;
+  overflow: visible;
 }
 
 .diagram-wrap canvas,
@@ -300,16 +300,16 @@ img {
 }
 
 /* ---------- ЛЕВАЯ КОЛОНКА ---------- */
-.fav-col-left .fi-1 { left: 5%;   top: -10%;   width: clamp(100px, 35%, 280px); }
-.fav-col-left .fi-2 { left: 65%;  top: 18%;  width: clamp(80px, 25%, 180px); }
-.fav-col-left .fi-3 { left: 7%;   top: 40%;  width: clamp(90px, 28%, 200px); }
-.fav-col-left .fi-4 { left: 50%;  top: 63%;  width: clamp(95px, 32%, 250px); }
+.fav-col-left .fi-1 { left: 5%;   top: -10%;   width: min(35%, 280px); }
+.fav-col-left .fi-2 { left: 65%;  top: 18%;  width: min(25%, 180px); }
+.fav-col-left .fi-3 { left: 7%;   top: 40%;  width: min(28%, 200px); }
+.fav-col-left .fi-4 { left: 50%;  top: 63%;  width: min(32%, 250px); }
 
 /* ---------- ПРАВАЯ КОЛОНКА ---------- */
-.fav-col-right .fi-1 { left: -20%;   top: -10%;   width: clamp(70px, 30%, 230px); }
-.fav-col-right .fi-2 { right: 30%;  top: -3%;  width: clamp(60px, 27%, 200px); left: auto; }
-.fav-col-right .fi-3 { left: 10%;  top: 32%;  width: clamp(100px, 37%, 300px); }
-.fav-col-right .fi-4 { right: 15%;  top: 65%;  width: clamp(70px, 30%, 190px); left: auto; }
+.fav-col-right .fi-1 { left: -20%;   top: -10%;   width: min(30%, 230px); }
+.fav-col-right .fi-2 { right: 30%;  top: -3%;  width: min(27%, 200px); left: auto; }
+.fav-col-right .fi-3 { left: 10%;  top: 32%;  width: min(37%, 300px); }
+.fav-col-right .fi-4 { right: 15%;  top: 65%;  width: min(30%, 190px); left: auto; }
 .fav-center {
   flex: 1;
   position: relative;
@@ -468,36 +468,41 @@ img {
 /* 1. Креативный дирекшн (Узкая вертикальная по центру) */
 #node-creative { left: 18%; top: 28%; }
 #node-creative .mm-frame { width: 45%; height: 160%; top: -25%; left: 27.5%; }
-#node-creative .mm-label { bottom: calc(100% + 2dvh); left: 27.5%; }
+/* рамка доходит до top:-25% — метка должна быть выше этой границы: bottom > 125% */
+#node-creative .mm-label { bottom: 133%; left: 27.5%; }
 
 /* 2. Форумы (Широкая, сдвинута влево и вверх) */
 #node-forums { left: 45%; top: 16%; }
 #node-forums .mm-img-wrap img { width: clamp(60px, min(9vw, 13dvh), 140px); }
 #node-forums .mm-frame { width: 110%; height: 110%; top: -15%; left: -10%; }
-#node-forums .mm-label { left: calc(100% + 1.5vw); top: 10%; }
+/* рамка доходит до right:100% — метка должна начинаться правее */
+#node-forums .mm-label { left: 108%; top: 10%; }
 
 /* 3. Концепты (Квадратная, сдвинута вниз и влево) */
 #node-concepts { left: 45%; top: 52%; }
 #node-concepts .mm-img-wrap img { width: clamp(70px, min(12vw, 17dvh), 180px); }
 #node-concepts .mm-frame { width: 85%; height: 100%; top: 15%; left: -10%; }
-#node-concepts .mm-label { top: calc(100% + 2.5dvh); left: -10%; }
+/* рамка доходит до bottom:115% — метка должна начинаться ниже */
+#node-concepts .mm-label { top: 122%; left: -10%; }
 
 /* 4. Архитектура (Сдвинута вниз и вправо) */
 #node-arch { left: 20%; top: 72%; }
 #node-arch .mm-frame { width: 75%; height: 90%; top: 15%; left: 20%; }
-#node-arch .mm-label { top: calc(100% + 2dvh); left: 20%; }
+/* рамка доходит до bottom:105% — метка должна начинаться ниже */
+#node-arch .mm-label { top: 112%; left: 20%; }
 
 /* 5. Публикации (Очень высокая и узкая, сдвинута влево) */
 #node-pub { left: 80%; top: 35%; }
 #node-pub .mm-img-wrap img { width: clamp(50px, min(9vw, 13dvh), 130px); }
 #node-pub .mm-frame { width: 25%; height: 250%; top: -100%; left: -10%; }
-/* Увеличиваем отступ снизу, чтобы текст не пересекал высокую рамку */
-#node-pub .mm-label { bottom: calc(100% + 4.5dvh); left: -10%; } 
+/* рамка доходит до top:-100% — метка должна быть значительно выше: bottom > 200% */
+#node-pub .mm-label { bottom: 208%; left: -10%; } 
 
 /* 6. Контакты (Широкая горизонтальная, сдвинута вправо) */
 #node-contacts { left: 65%; top: 80%; }
 #node-contacts .mm-frame { width: 140%; height: 85%; top: 15%; left: 25%; }
-#node-contacts .mm-label { left: calc(100% + 2vw); bottom: 0; }
+/* рамка доходит до right:165% — метка должна начинаться правее */
+#node-contacts .mm-label { left: 172%; bottom: 0; }
 
 /* Надпись [about] снизу по центру */
 .mm-footer {

@@ -1,0 +1,195 @@
+/* ---------- СТИЛИ СТРАНИЦЫ ПРОЕКТА ---------- */
+body.project-page {
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Кнопка "Назад" в левом верхнем углу */
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8c8c8c;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-3px);
+}
+
+.project-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 20px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Заголовок */
+.project-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.project-bg-num {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(32px, 7vw, 90px);
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.project-subtitle {
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: #8c8c8c;
+  margin-top: 10px;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+}
+
+/* Одиночные блоки с фото и текстом */
+.project-block {
+  width: 100%;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.project-img-single {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.project-img-single img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.project-text {
+  width: 100%;
+  max-width: 900px;
+  font-size: clamp(13px, 1.4vw, 16px);
+  line-height: 1.6;
+  color: #d1d1d1;
+  font-weight: 300;
+  text-align: left;
+}
+
+.project-text p + p {
+  margin-top: 16px;
+}
+
+/* Сетка для составных карточек (например, 0031 + 0032) */
+.project-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.project-grid-2 img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Карусель обоев внизу */
+.project-carousel-section {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.p-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.p-carousel-track-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.p-carousel-track {
+  display: flex;
+  gap: 12px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.p-carousel-slide {
+  flex: 0 0 calc(33.333% - 8px);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.p-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.p-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.3s;
+}
+
+.p-carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.p-prev { left: -18px; }
+.p-next { right: -18px; }
+
+@media (max-width: 670px) {
+  .p-carousel-slide {
+    flex: 0 0 calc(50% - 6px);
+  }
+  .p-prev { left: 4px; }
+  .p-next { right: 4px; }
+  .project-container {
+    padding-top: 70px;
+  }
+}

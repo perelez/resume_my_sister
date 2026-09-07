@@ -99,97 +99,74 @@ document.addEventListener('DOMContentLoaded', () => {
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    const favItems = wrap.querySelectorAll('.fav-item');
+    const favItems = Array.from(wrap.querySelectorAll('.fav-item'));
+
+    // Реальные позиции всех фото каждой колонки, отсортированные по высоте —
+    // нужны, чтобы находить "соседа" и строить изгиб линии в реальном
+    // зазоре между фото, а не в фиксированной точке (которая могла
+    // случайно совпасть с собственным положением фото — изгиб пропадал).
+    function colItems(side) {
+      return favItems
+        .filter(it => (it.dataset.side === '-1' ? -1 : 1) === side)
+        .map(it => {
+          const img = it.querySelector('img');
+          const r = img.getBoundingClientRect();
+          return { item: it, edgeY: (r.top + r.height / 2) - wrapRect.top };
+        })
+        .sort((a, b) => a.edgeY - b.edgeY);
+    }
+    const leftSorted = colItems(-1);
+    const rightSorted = colItems(1);
+
     favItems.forEach((item) => {
       const img = item.querySelector('img');
       if (!img) return;
 
       const r = img.getBoundingClientRect();
       const side = item.dataset.side === '-1' ? -1 : 1;
-      const numEl = item.querySelector('.num');
-      const num = numEl ? numEl.textContent.trim() : '';
 
       // Точка привязки к внутреннему краю фотографии
       const edgeX = (side < 0 ? r.right : r.left) - wrapRect.left;
       const edgeY = (r.top + r.height / 2) - wrapRect.top;
 
-      let points = [];
+      // Как на референсе: горизонталь от фото почти до центра → вертикальная
+      // "ступенька" рядом с фигурой → короткая горизонталь в саму фигуру.
+      // Поворот НЕ у фото, а ближе к центру — именно так выглядит образец.
+      let fiNum = 1;
+      if (item.classList.contains('fi-2')) fiNum = 2;
+      else if (item.classList.contains('fi-3')) fiNum = 3;
+      else if (item.classList.contains('fi-4')) fiNum = 4;
 
-      switch (num) {
-        case '001':
-          points = [
-            [edgeX, edgeY],
-            [chestX - W * 0.11, edgeY + H * 0.09],
-            [chestX - W * 0.03, edgeY + H * 0.09]
-          ];
-          break;
+      // Свой X-коридор (где именно происходит "ступенька") под каждую линию —
+      // чтобы вертикальные участки восьми линий не совпадали друг с другом
+      const CORRIDOR_OFFSETS = { 1: 0.06, 2: 0.11, 3: 0.16, 4: 0.21 }; // доля W от chestX
+      // ВАЖНО: знак "+" — коридор должен быть МЕЖДУ фото и центром фигуры.
+      // С "-" линия сначала перелетала ЗА центр (на противоположную половину),
+      // а затем возвращалась назад — это и создавало "перехлёст"/кашу из линий.
+      const corridorX = chestX + side * W * CORRIDOR_OFFSETS[fiNum];
 
-        case '002':
-          points = [
-            [edgeX, edgeY],
-            [chestX - W * 0.03, edgeY]
-          ];
-          break;
+      // Своя Y-полоса схождения — разная у left/right, чтобы линии не
+      // сливались в одну сплошную горизонталь через всю фигуру
+      const TARGET_Y_BANDS_LEFT  = { 1: 0.30, 2: 0.42, 3: 0.54, 4: 0.66 };
+      const TARGET_Y_BANDS_RIGHT = { 1: 0.36, 2: 0.48, 3: 0.60, 4: 0.72 };
+      const bands = side < 0 ? TARGET_Y_BANDS_LEFT : TARGET_Y_BANDS_RIGHT;
+      let targetY = H * bands[fiNum];
 
-        case '003':
-          const startY_003 = (r.top - wrapRect.top) + (r.height * 0.6);
-          points = [
-            [edgeX, startY_003],
-            [chestX - W * 0.25, edgeY - H * 0.04],
-            [chestX - W * 0.07, edgeY - H * 0.04]
-          ];
-          break;
-
-        case '004':
-          points = [
-            [edgeX, edgeY],
-            [chestX - W * 0.05, H * 0.70]
-          ];
-          break;
-
-        case '005':
-          const startY_005 = (r.top - wrapRect.top) + (r.height * 0.33);
-          points = [
-            [edgeX, startY_005],
-            [chestX + W * 0.03, H * 0.28]
-          ];
-          break;
-
-        case '006':
-          const startY_006 = (r.top - wrapRect.top) + (r.height * 0.80);
-          points = [
-            [edgeX, startY_006],
-            [chestX + W * 0.12, startY_006],
-            [chestX + W * 0.12, H * 0.36],
-            [chestX + W * 0.04, H * 0.36]
-          ];
-          break;
-
-        case '007':
-          points = [
-            [edgeX, edgeY],
-            [chestX + W * 0.12, edgeY],
-            [chestX + W * 0.12, edgeY + H * 0.10],
-            [chestX + W * 0.08, edgeY + H * 0.10],
-            [chestX + W * 0.08, edgeY]
-          ];
-          break;
-
-        case '008':
-          const startY_008 = (r.top - wrapRect.top) + (r.height * 0.88);
-          points = [
-            [edgeX, startY_008],
-            [chestX + W * 0.05, H * 0.67]
-          ];
-          break;
-
-        default:
-          points = [
-            [edgeX, edgeY],
-            [chestX, edgeY]
-          ];
-          break;
+      // Гарантия видимого излома: если полоса случайно оказалась слишком
+      // близко к высоте самого фото, принудительно отодвигаем её
+      const MIN_BEND = Math.max(H * 0.10, 50);
+      if (Math.abs(targetY - edgeY) < MIN_BEND) {
+        targetY = edgeY + (targetY >= edgeY ? MIN_BEND : -MIN_BEND);
       }
+
+      // Горизонталь от фото до коридора → вертикальная ступенька →
+      // горизонталь в фигуру (2 чётких поворота под 90°, как на референсе)
+      const points = [
+        [edgeX, edgeY],
+        [corridorX, edgeY],
+        [corridorX, targetY],
+        [chestX, targetY]
+      ];
 
       const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ');
 
@@ -197,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       mainPath.setAttribute('d', pathD);
       mainPath.setAttribute('fill', 'none');
-      mainPath.setAttribute('stroke', 'rgba(198, 198, 198, 0.25)');
-      mainPath.setAttribute('stroke-width', '1.3');
+      mainPath.setAttribute('stroke', '#dadada');
+      mainPath.setAttribute('stroke-width', '0.8');
       svg.appendChild(mainPath);
 
       const totalLen = mainPath.getTotalLength();
@@ -270,8 +247,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Слушатели ховера
       const onMouseEnter = () => {
         isHovered = true;
-        createParticle();
-        spawnInterval = setInterval(createParticle, 400);
+        // сразу несколько частиц с небольшим сдвигом по дистанции — плотный поток с первого кадра
+        for (let k = 0; k < 4; k++) {
+          setTimeout(createParticle, k * 60);
+        }
+        spawnInterval = setInterval(createParticle, 110); // было 400 — теперь точек заметно больше
       };
 
       const onMouseLeave = () => {
@@ -297,7 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-   /* -------------------------------------------------------------
+
+  /* -------------------------------------------------------------
    * НОВОЕ: точный расчёт размеров .diagram-wrap через JS.
    * Меряем реальную высоту, занятую заголовком [favorite] +
    * "избранные проекты", и вписываем рамку 2.5:1 в то, что
@@ -420,8 +401,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(drawLines, 50);
   setTimeout(drawLines, 400);
-
-  
 
   /* -------------------------------------------------------------
    * 3. MINDMAP LINES

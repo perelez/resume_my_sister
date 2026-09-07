@@ -81,6 +81,7 @@ export function initFigureAnimation() {
   }
   
   window.addEventListener('resize', resize);
+  window.resizeFigureCanvas = resize; // делаем доступной извне, для sizeFigureCanvas() в main.js
   resize();
 
   const buckets = new Map();
@@ -212,7 +213,12 @@ const mouse = { x: -99999, y: -99999 };
 const diagramWrap = document.getElementById('diagramWrap') || window;
 
 diagramWrap.addEventListener('mousemove', (e) => {
-  const rect = (document.getElementById('diagramWrap') || canvas).getBoundingClientRect();
+  // ВАЖНО: rect должен быть именно canvas'а фигуры, а не всей рамки —
+  // scale/offsetX/offsetY в resize() тоже считаются от rect канваса.
+  // Раньше canvas был растянут на всю рамку (inset:0) и они совпадали,
+  // но после того как у фигуры появился независимый размер/центрирование,
+  // эти прямоугольники стали разными — отсюда был сдвиг курсора.
+  const rect = canvas.getBoundingClientRect();
   
   // Перевод координат мыши в локальные координаты модели 826x1524
   mouse.x = (e.clientX - rect.left - offsetX) / scale;

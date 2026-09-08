@@ -305,6 +305,58 @@ img {
   text-align: center;
 }
 
+.fav-media {
+  position: relative;
+  width: 100%;
+}
+
+.fav-caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 12% 10%;
+  background: rgba(10, 10, 10, 0.78);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  line-height: 1.35;
+}
+
+@media (hover: hover) {
+  .fav-item:hover .fav-caption {
+    opacity: 1;
+  }
+}
+
+.fav-item.caption-active .fav-caption {
+  opacity: 1;
+}
+
+.fav-caption .fav-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(9px, 0.85vw, 13px);
+  color: #fff;
+}
+
+.fav-caption .fav-role {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(9px, 0.85vw, 13px);
+  color: #fff;
+  margin-top: 6px;
+}
+
+.fav-caption .fav-tags {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(8px, 0.72vw, 11px);
+  color: #b5b5b5;
+  margin-top: 6px;
+}
+
 /* ---------- ЛЕВАЯ КОЛОНКА ---------- */
 .fav-col-left .fi-1 { left: 5%;   top: -10%;   width: min(35%, 280px); }
 .fav-col-left .fi-2 { left: 65%;  top: 18%;  width: min(25%, 180px); }
@@ -475,7 +527,7 @@ img {
 #node-creative { left: 18%; top: 28%; }
 #node-creative .mm-frame { width: 45%; height: 160%; top: -25%; left: 27.5%; }
 /* рамка доходит до top:-25% — метка должна быть выше этой границы: bottom > 125% */
-#node-creative .mm-label { bottom: 133%; left: 27.5%; }
+#node-creative .mm-label { bottom: 133%; left: 27.5%; white-space: normal; max-width: clamp(140px, 32vw, 260px); }
 
 /* 2. Форумы (Широкая, сдвинута влево и вверх) */
 #node-forums { left: 45%; top: 16%; }
@@ -581,8 +633,6 @@ img {
 /* Состояние центральной фотки */
 .carousel-slide.active {
   opacity: 1;
-  z-index: 2;
-  margin: 0 1vw; /* Раздвигаем соседей */
 }
 
 /* Кнопки переключения */
@@ -629,6 +679,16 @@ img {
   line-height: 1.5;
   color: #fff;
   margin-bottom: 40px;
+}
+
+.about-cta {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: clamp(13px, 1.6vw, 20px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #333333; /* тот же цвет, что и у email ниже */
+  margin-bottom: 16px;
 }
 
 .about-email {
@@ -790,16 +850,16 @@ img {
   }
 
   /* Позиционирование карточек слева (001 - 004) */
-  .fav-col-left .fi-1 { left: 15%;  top: -30%;   width: 25%; }
-  .fav-col-left .fi-2 { left: 15%;   top: 20%;  width: 25%; }
-  .fav-col-left .fi-3 { left: 15%;  top: 70%;  width: 25%; }
-  .fav-col-left .fi-4 { left: 15%;   top: 120%;  width: 25%; }
+  .fav-col-left .fi-1 { left: 15%;  top: -3%;   width: 28%; }
+  .fav-col-left .fi-2 { left: 9%;   top: 24%;  width: 23%; }
+  .fav-col-left .fi-3 { left: 15%;  top: 49%;  width: 25%; }
+  .fav-col-left .fi-4 { left: 20%;   top: 73%;  width: 31%; }
 
   /* Позиционирование карточек справа (005 - 008) */
-  .fav-col-right .fi-1 { right: 15%; top: 1%;   width: 33%; left: auto; }
-  .fav-col-right .fi-2 { right: 15%; top: 22%;  width: 27%; left: auto; }
-  .fav-col-right .fi-3 { right: 15%; top: 45%;  width: 33%; left: auto; }
-  .fav-col-right .fi-4 { right: 15%; top: 68%;  width: 29%; left: auto; }
+  .fav-col-right .fi-1 { right: -2%; top: 1%;   width: 33%; left: auto; }
+  .fav-col-right .fi-2 { right: 12%; top: 22%;  width: 27%; left: auto; }
+  .fav-col-right .fi-3 { right: -1%; top: 45%;  width: 33%; left: auto; }
+  .fav-col-right .fi-4 { right: 10%; top: 68%;  width: 29%; left: auto; }
 }
 
 @media (max-width: 480px) {

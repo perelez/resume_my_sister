@@ -23,8 +23,9 @@
 *   `package.json` — зависимости проекта и npm-скрипты.
 
 ## ⚙️ Как запустить проект локально
+1. ссылка на рабочий сайт https://a-novum.vercel.app
 
-1.  Склонируйте репозиторий:
+2.  Склонируйте репозиторий:
     ```bash
     git clone https://github.com/perelez/resume_my_sister.git
 Перейдите в папку проекта:
